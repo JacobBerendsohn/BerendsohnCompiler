@@ -8,7 +8,9 @@ Java <br>
 
 ## Requirements
 
-Have <a href = "https://nodejs.org/en/download/"> Java Development Kit Version 1.8 </a> installed.
+Have <a href = "https://www.java.com/en/download/manual.jsp"> Java Development Kit Version 1.8 </a> installed.
+
+Be sure the Path environment variable is pointing to the correct version of Java.
 
 ## Starting the program
 
