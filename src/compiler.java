@@ -7,19 +7,27 @@ public class compiler {
     public static File languageInput;
 
     public static void main(String[] args) {
+
+        lexer lex = new lexer();
+
+        // Enthusiastic Intro
         System.out.println("I cannot wait to have a fully functional compiler I made myself!");
 
+        // Reading out given parameters
         System.out.println("Given Arguments:");
         for (int i = 0; i < args.length; i++) {
             System.out.println("Argument " + i + ": " + args[i]);
         }
 
         // Taking in the file from the command line
-        try {
-            Scanner input = new Scanner(new File(args[0]));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (0 < args.length) {
+            languageInput = new File(args[0]);
+        } else {
+            System.err.println("Invalid arguments count:" + args.length);
         }
+
+        // Starting the lexer
+        lex.lex(languageInput);
 
     }
 }
