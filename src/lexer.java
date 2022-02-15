@@ -42,6 +42,7 @@ public class lexer {
                 // Placeholder for current line
                 String phLine = inputLines.get(line);
                 String[] phLineArray = phLine.split("");
+                preTokenList.clear();
 
                 for (String str : phLineArray) {
                     preTokenList.add(str);
@@ -76,6 +77,11 @@ public class lexer {
                     // Digit Check
                     if (checkDigit(preTokenList, curPosInLineArray, line) != null) {
                         token diT = checkDigit(preTokenList, curPosInLineArray, line);
+                        tokens.add(diT);
+                    }
+                    // EOP Check
+                    if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
+                        token diT = checkEOP(preTokenList, curPosInLineArray, line);
                         tokens.add(diT);
                     }
 
@@ -237,45 +243,45 @@ public class lexer {
     public token checkSymbol(ArrayList<String> currLine, int curPos, int currLineInt) {
         if (currLine.get(curPos) != null) {
             // Checking for open Brackets
-            if (currLine.get(curPos).equalsIgnoreCase("{")) {
+            if (currLine.get(curPos).equals("{")) {
                 return createToken("L_BRACE", "{",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // Checking for closed Brackets
-            if (currLine.get(curPos).equalsIgnoreCase("}")) {
+            if (currLine.get(curPos).equals("}")) {
                 return createToken("R_BRACE", "}",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // Checking for open Parenthesis
-            if (currLine.get(curPos).equalsIgnoreCase("(")) {
+            if (currLine.get(curPos).equals("(")) {
                 return createToken("L_PAREN", "(",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // Checking for closed Parenthesis
-            if (currLine.get(curPos).equalsIgnoreCase(")")) {
+            if (currLine.get(curPos).equals(")")) {
                 return createToken("R_PAREN", ")",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // Checking for addition
-            if (currLine.get(curPos).equalsIgnoreCase("+")) {
+            if (currLine.get(curPos).equals("+")) {
                 return createToken("ADDITION", "+",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // Checking for assign
-            if (currLine.get(curPos).equalsIgnoreCase("=") && !currLine.get(curPos + 1).equalsIgnoreCase("=")) {
+            if (currLine.get(curPos).equals("=") && !currLine.get(curPos + 1).equals("=")) {
                 return createToken("ASSIGN", "=",
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
             // == Check
             if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equalsIgnoreCase("==")) {
+                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("==")) {
                     return createToken("EQUIVALENT", "==",
                             Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
                 }
             }
             // != Check
             if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equalsIgnoreCase("!=")) {
+                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("!=")) {
                     return createToken("NOT_EQUIV", "!=",
                             Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
                 }
@@ -304,6 +310,17 @@ public class lexer {
         return null;
     }
 
+    public token checkEOP(ArrayList<String> currLine, int curPos, int currLineInt) {
+        if (currLine.get(curPos) != null) {
+            // Checking for end operator
+            if (currLine.get(curPos).equals("$")) {
+                return createToken("END_OP", "$",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+            }
+        }
+        return null;
+    }
+
     public void debug(ArrayList<token> tokens) {
         for (token t : tokens) {
             System.out.println(
@@ -311,6 +328,7 @@ public class lexer {
         }
     }
 
+    // Sends back the end position of a quotation in the array
     public int checkQuote(ArrayList<String> currLine, int startPos, int currLineInt) {
         for (int i = startPos; i < currLine.size(); i++) {
             if ((currLine.get(i)).equals("\"")) {
