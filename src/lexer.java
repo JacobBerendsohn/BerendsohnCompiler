@@ -46,21 +46,26 @@ public class lexer {
                 String[] phLineArray = phLine.split("");
 
                 // Test Array
-                ArrayList<String> testingKeywords = new ArrayList<String>();
+                ArrayList<token> testingKeywords = new ArrayList<token>();
 
                 // Iterating through the new array to run checks on each potential token
                 int curPosInLineArray = 0;
                 for (String str : phLineArray) {
                     System.out.println(str);
-                    if (checkKeyword(phLineArray, curPosInLineArray) != "") {
-                        testingKeywords.add(checkKeyword(phLineArray, curPosInLineArray));
+
+                    // Keyword Check
+                    if (checkKeyword(phLineArray, curPosInLineArray, line) != null) {
+                        testingKeywords.add(
+                                checkKeyword(phLineArray, curPosInLineArray, line));
                     }
 
+                    // Moving pointer to next item in Array
                     curPosInLineArray++;
                 }
 
-                for (String str : testingKeywords) {
-                    System.out.println("Token: " + str);
+                for (token tok : testingKeywords) {
+                    System.out.println("Token Type: " + tok.getType() + "Token Value: " + tok.getValue()
+                            + "Token Position: " + tok.getLine());
                 }
 
             } else {
@@ -73,65 +78,74 @@ public class lexer {
         return tokens;
     }
 
-    public String checkKeyword(String[] currLine, int curPos) {
+    public token checkKeyword(String[] currLine, int curPos, int currLineInt) {
         // While check
         if (curPos + 4 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
                     + currLine[curPos + 4]).equalsIgnoreCase("while")) {
-                return "while";
+                return createToken("WHILE_STATEMENT", "while",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // Print check
         if (curPos + 4 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
                     + currLine[curPos + 4]).equalsIgnoreCase("print")) {
-                return "print";
+                return createToken("PRINT_STATEMENT", "print",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // If check
         if (curPos + 1 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1]).equalsIgnoreCase("if")) {
-                return "if";
+                return createToken("IF_STATEMENT", "if",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // Int check
         if (curPos + 2 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2]).equalsIgnoreCase("int")) {
-                return "int";
+                return createToken("INT_TYPE", "int",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // String check
         if (curPos + 5 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
                     + currLine[curPos + 4] + currLine[curPos + 5]).equalsIgnoreCase("string")) {
-                return "string";
+                return createToken("STRING_TYPE", "string",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // Boolean check
         if (curPos + 6 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
                     + currLine[curPos + 4] + currLine[curPos + 5] + currLine[curPos + 6]).equalsIgnoreCase("boolean")) {
-                return "boolean";
+                return createToken("BOOLEAN_TYPE", "boolean",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // True check
         if (curPos + 3 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 2])
                     .equalsIgnoreCase("true")) {
-                return "true";
+                return createToken("BOOLEAN_VALUE", "true",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
         }
         // False check
         if (curPos + 4 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
                     + currLine[curPos + 4]).equalsIgnoreCase("print")) {
-                return "print";
+                return createToken("BOOLEAN_VALUE", "false",
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
             }
 
         }
-        return "";
+        return null;
     }
 
+    // Creates a token object
     public token createToken(String type, String value, String position) {
         token returnToken = new token(type, value, position);
         return returnToken;
