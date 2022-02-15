@@ -37,72 +37,66 @@ public class lexer {
         for (int line = 1; line < inputLines.size() + 1; line++) {
 
             // Checking if the line contains more than one character to split if need be
-            if (inputLines.get(line).length() > 1) {
 
-                // Placeholder for current line
-                String phLine = inputLines.get(line);
-                String[] phLineArray = phLine.split("");
-                preTokenList.clear();
+            // Placeholder for current line
+            String phLine = inputLines.get(line);
+            String[] phLineArray = phLine.split("");
+            preTokenList.clear();
 
-                for (String str : phLineArray) {
-                    preTokenList.add(str);
-                }
-
-                // Iterating through the new array to run checks on each potential token
-                int curPosInLineArray = 0;
-                for (String str : preTokenList) {
-
-                    // Keyword Check
-                    if (checkKeyword(preTokenList, curPosInLineArray, line) != null) {
-                        token kwT = checkKeyword(preTokenList, curPosInLineArray, line);
-                        // Removing items from previous token from ArrayList
-                        for (int i = curPosInLineArray; i <= kwT.getNewPos(); i++) {
-                            preTokenList.set(i, null);
-                        }
-                        tokens.add(kwT);
-                    }
-                    // ID Check
-                    if (checkID(preTokenList, curPosInLineArray, line) != null) {
-                        token idT = checkID(preTokenList, curPosInLineArray, line);
-                        for (int i = curPosInLineArray; i <= idT.getNewPos(); i++) {
-                            preTokenList.set(i, null);
-                        }
-                        tokens.add(idT);
-                    }
-                    // Symbol Check
-                    if (checkSymbol(preTokenList, curPosInLineArray, line) != null) {
-                        token syT = checkSymbol(preTokenList, curPosInLineArray, line);
-                        tokens.add(syT);
-                    }
-                    // Digit Check
-                    if (checkDigit(preTokenList, curPosInLineArray, line) != null) {
-                        token diT = checkDigit(preTokenList, curPosInLineArray, line);
-                        tokens.add(diT);
-                    }
-                    // EOP Check
-                    if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
-                        token diT = checkEOP(preTokenList, curPosInLineArray, line);
-                        tokens.add(diT);
-                    }
-
-                    // Moving pointer to next item in Array
-
-                    curPosInLineArray++;
-                }
-
-                /*
-                 * for (token tok : testingKeywords) {
-                 * System.out.println("Token Type: " + tok.getType() + "Token Value: " +
-                 * tok.getValue()
-                 * + "Token Position: " + tok.getLine());
-                 * }
-                 */
-
-            } else {
-
-                System.out.println(inputLines.get(line));
-                // Functions for checking which token it is
+            for (String str : phLineArray) {
+                preTokenList.add(str);
             }
+
+            // Iterating through the new array to run checks on each potential token
+            int curPosInLineArray = 0;
+            for (String str : preTokenList) {
+
+                // Keyword Check
+                if (checkKeyword(preTokenList, curPosInLineArray, line) != null) {
+                    token kwT = checkKeyword(preTokenList, curPosInLineArray, line);
+                    // Removing items from previous token from ArrayList
+                    for (int i = curPosInLineArray; i <= kwT.getNewPos(); i++) {
+                        preTokenList.set(i, null);
+                    }
+                    tokens.add(kwT);
+                }
+                // ID Check
+                if (checkID(preTokenList, curPosInLineArray, line) != null) {
+                    token idT = checkID(preTokenList, curPosInLineArray, line);
+                    for (int i = curPosInLineArray; i <= idT.getNewPos(); i++) {
+                        preTokenList.set(i, null);
+                    }
+                    tokens.add(idT);
+                }
+                // Symbol Check
+                if (checkSymbol(preTokenList, curPosInLineArray, line) != null) {
+                    token syT = checkSymbol(preTokenList, curPosInLineArray, line);
+                    tokens.add(syT);
+                }
+                // Digit Check
+                if (checkDigit(preTokenList, curPosInLineArray, line) != null) {
+                    token diT = checkDigit(preTokenList, curPosInLineArray, line);
+                    tokens.add(diT);
+                }
+                // EOP Check
+                if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
+                    token diT = checkEOP(preTokenList, curPosInLineArray, line);
+                    tokens.add(diT);
+                }
+
+                // Moving pointer to next item in Array
+
+                curPosInLineArray++;
+            }
+
+            /*
+             * for (token tok : testingKeywords) {
+             * System.out.println("Token Type: " + tok.getType() + "Token Value: " +
+             * tok.getValue()
+             * + "Token Position: " + tok.getLine());
+             * }
+             */
+
         }
 
         // Calling debugger to print tokens
