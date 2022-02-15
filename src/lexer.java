@@ -45,9 +45,6 @@ public class lexer {
                 String phLine = inputLines.get(line);
                 String[] phLineArray = phLine.split("");
 
-                // Test Array
-                ArrayList<token> testingKeywords = new ArrayList<token>();
-
                 // Iterating through the new array to run checks on each potential token
                 int curPosInLineArray = 0;
                 for (String str : phLineArray) {
@@ -55,18 +52,20 @@ public class lexer {
 
                     // Keyword Check
                     if (checkKeyword(phLineArray, curPosInLineArray, line) != null) {
-                        testingKeywords.add(
-                                checkKeyword(phLineArray, curPosInLineArray, line));
+                        tokens.add(checkKeyword(phLineArray, curPosInLineArray, line));
                     }
 
                     // Moving pointer to next item in Array
                     curPosInLineArray++;
                 }
 
-                for (token tok : testingKeywords) {
-                    System.out.println("Token Type: " + tok.getType() + "Token Value: " + tok.getValue()
-                            + "Token Position: " + tok.getLine());
-                }
+                /*
+                 * for (token tok : testingKeywords) {
+                 * System.out.println("Token Type: " + tok.getType() + "Token Value: " +
+                 * tok.getValue()
+                 * + "Token Position: " + tok.getLine());
+                 * }
+                 */
 
             } else {
 
@@ -75,6 +74,8 @@ public class lexer {
             }
         }
 
+        // Calling debugger to print tokens
+        debug(tokens);
         return tokens;
     }
 
