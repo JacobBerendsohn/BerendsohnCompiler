@@ -145,6 +145,29 @@ public class lexer {
         return null;
     }
 
+    public token checkID(String[] currLine, int curPos, int currLineInt) {
+        return null;
+    }
+
+    public token checkSymbol(String[] currLine, int curPos, int currLineInt) {
+        return null;
+    }
+
+    public token checkDigit(String[] currLine, int curPos, int currLineInt) {
+        return null;
+    }
+
+    public token checkCharacters(String[] currLine, int curPos, int currLineInt) {
+        return null;
+    }
+
+    public void debug(ArrayList<token> tokens) {
+        for (token t : tokens) {
+            System.out.println(
+                    "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+        }
+    }
+
     // Creates a token object
     public token createToken(String type, String value, String position) {
         token returnToken = new token(type, value, position);
