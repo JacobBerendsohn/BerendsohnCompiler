@@ -31,6 +31,7 @@ public class lexer {
             e.printStackTrace();
         }
 
+        // Printing out the HashMap
         inputLines.forEach((k, v) -> System.out.println("Line: " + k + " Contains: " + v));
 
         // Beginning Lex
@@ -85,17 +86,8 @@ public class lexer {
                 }
 
                 // Moving pointer to next item in Array
-
                 curPosInLineArray++;
             }
-
-            /*
-             * for (token tok : testingKeywords) {
-             * System.out.println("Token Type: " + tok.getType() + "Token Value: " +
-             * tok.getValue()
-             * + "Token Position: " + tok.getLine());
-             * }
-             */
 
         }
 
