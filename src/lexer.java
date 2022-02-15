@@ -309,8 +309,16 @@ public class lexer {
 
     public void debug(ArrayList<token> tokens) {
         for (token t : tokens) {
-            System.out.println(
-                    "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+            if (t.getType().equals("END_OP")) {
+                System.out.println(
+                        "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+                System.out.println(
+                        "INFO Lexer - LEX completed with ? errors");
+            } else {
+                System.out.println(
+                        "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+            }
+
         }
     }
 
