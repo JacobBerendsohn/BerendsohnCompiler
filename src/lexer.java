@@ -55,6 +55,11 @@ public class lexer {
                         tokens.add(checkKeyword(phLineArray, curPosInLineArray, line));
                     }
 
+                    // ID Check
+                    if (checkID(phLineArray, curPosInLineArray, line) != null) {
+                        tokens.add(checkID(phLineArray, curPosInLineArray, line));
+                    }
+
                     // Moving pointer to next item in Array
                     curPosInLineArray++;
                 }
@@ -167,6 +172,24 @@ public class lexer {
             System.out.println(
                     "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
         }
+    }
+
+    // Sends back the end position of a block comment in the array
+    public int checkComment(String[] currLine, int startPos, int currLineInt) {
+        for (int i = startPos; i < currLine.length; i++) {
+            if (currLine[i].equals("*/")) {
+                return i + 1;
+            } else {
+                createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
+                        "Missing '*/' to end Block");
+            }
+        }
+
+        return startPos;
+    }
+
+    public void createWarning(String position, String message) {
+        System.out.println("WARNING Lexer - Position: " + position + " Message: " + message);
     }
 
     // Creates a token object
