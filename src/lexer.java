@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class lexer {
 
@@ -85,6 +83,19 @@ public class lexer {
     }
 
     public token checkKeyword(String[] currLine, int curPos, int currLineInt) {
+
+        // Block Comment Check
+        if (curPos + 1 < currLine.length) {
+            if ((currLine[curPos] + currLine[curPos + 1]).equals("/*")) {
+                curPos = checkComment(currLine, curPos, currLineInt);
+            }
+        }
+        // Quotation check
+        if (curPos + 1 < currLine.length) {
+            if ((currLine[curPos] + currLine[curPos + 1]).equals("/*")) {
+                curPos = checkComment(currLine, curPos, currLineInt);
+            }
+        }
         // While check
         if (curPos + 4 < currLine.length) {
             if ((currLine[curPos] + currLine[curPos + 1] + currLine[curPos + 2] + currLine[curPos + 3]
@@ -152,6 +163,39 @@ public class lexer {
     }
 
     public token checkID(String[] currLine, int curPos, int currLineInt) {
+
+        // Block Comment Check
+        if (curPos + 1 < currLine.length) {
+            if ((currLine[curPos] + currLine[curPos + 1]).equals("/*")) {
+                curPos = checkComment(currLine, curPos, currLineInt);
+            }
+        }
+        // Quotation check
+        if (curPos + 1 < currLine.length) {
+            if ((currLine[curPos] + currLine[curPos + 1]).equals("/*")) {
+                curPos = checkComment(currLine, curPos, currLineInt);
+            }
+        }
+        // ID Check
+        if (currLine[curPos].equalsIgnoreCase("a") || currLine[curPos].equalsIgnoreCase("b")
+                || currLine[curPos].equalsIgnoreCase("c") || currLine[curPos].equalsIgnoreCase("d")
+                || currLine[curPos].equalsIgnoreCase("e") || currLine[curPos].equalsIgnoreCase("f")
+                || currLine[curPos].equalsIgnoreCase("g") || currLine[curPos].equalsIgnoreCase("h")
+                || currLine[curPos].equalsIgnoreCase("i") || currLine[curPos].equalsIgnoreCase("j")
+                || currLine[curPos].equalsIgnoreCase("k") || currLine[curPos].equalsIgnoreCase("l")
+                || currLine[curPos].equalsIgnoreCase("m") || currLine[curPos].equalsIgnoreCase("n")
+                || currLine[curPos].equalsIgnoreCase("o") || currLine[curPos].equalsIgnoreCase("p")
+                || currLine[curPos].equalsIgnoreCase("q") || currLine[curPos].equalsIgnoreCase("r")
+                || currLine[curPos].equalsIgnoreCase("s") || currLine[curPos].equalsIgnoreCase("t")
+                || currLine[curPos].equalsIgnoreCase("u") || currLine[curPos].equalsIgnoreCase("v")
+                || currLine[curPos].equalsIgnoreCase("w") || currLine[curPos].equalsIgnoreCase("x")
+                || currLine[curPos].equalsIgnoreCase("y") || currLine[curPos].equalsIgnoreCase("z")) {
+
+            // Creating token for ID
+            return createToken("ID", currLine[curPos],
+                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos));
+
+        }
         return null;
     }
 
@@ -174,22 +218,41 @@ public class lexer {
         }
     }
 
-    // Sends back the end position of a block comment in the array
-    public int checkComment(String[] currLine, int startPos, int currLineInt) {
+    public int checkQuote(String[] currLine, int startPos, int currLineInt) {
         for (int i = startPos; i < currLine.length; i++) {
-            if (currLine[i].equals("*/")) {
+            if ((currLine[i]).equals("\"")) {
                 return i + 1;
             } else {
+                // Case where quote is not closed
                 createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
-                        "Missing '*/' to end Block");
+                        "Missing ' \" ' to end quotation");
+                break;
             }
         }
-
         return startPos;
     }
 
+    // Sends back the end position of a block comment in the array
+    public int checkComment(String[] currLine, int startPos, int currLineInt) {
+        for (int i = startPos; i < currLine.length; i++) {
+            if ((currLine[i] + currLine[i + 1]).equals("*/")) {
+                // System.out.println("CheckCOmment Test");
+                return i + 2;
+            } else {
+                // System.out.println("CheckCOmment Test 2");
+                // Case where block does not end
+                createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
+                        "Missing '*/' to end Block");
+                break;
+            }
+        }
+        // System.out.println("CheckCOmment Test 3");
+        return startPos;
+    }
+
+    // Creates a warning for the user but does not stop the lex
     public void createWarning(String position, String message) {
-        System.out.println("WARNING Lexer - Position: " + position + " Message: " + message);
+        System.out.println("WARNING Lexer - Position: (" + position + ") Message: " + message);
     }
 
     // Creates a token object
