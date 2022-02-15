@@ -132,10 +132,9 @@ public class lexer {
         return "";
     }
 
-    public token createToken() {
-        token test = null;
-
-        return test;
+    public token createToken(String type, String value, String position) {
+        token returnToken = new token(type, value, position);
+        return returnToken;
     }
 
 }
