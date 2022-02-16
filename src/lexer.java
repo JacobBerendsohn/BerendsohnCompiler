@@ -12,6 +12,10 @@ public class lexer {
     public String languageString[][];
     public Boolean isQuote = false;
 
+    // Add a varibla to store the current position, reference that instead of
+    // passing the current position between functions
+    // public int curPosInLineArray = 0;
+
     public ArrayList<token> lex(File inputFile) {
 
         BufferedReader reader;
