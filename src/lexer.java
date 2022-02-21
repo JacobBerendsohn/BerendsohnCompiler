@@ -40,7 +40,6 @@ public class lexer {
 
         // Beginning Lex
         for (int line = 1; line < inputLines.size() + 1; line++) {
-
             // Checking if the line contains more than one character to split if need be
 
             // Placeholder for current line
@@ -94,7 +93,6 @@ public class lexer {
             }
 
         }
-
         // Calling debugger to print tokens
         debug(tokens);
         return tokens;
@@ -277,7 +275,6 @@ public class lexer {
                 }
             }
         }
-
         return null;
     }
 
