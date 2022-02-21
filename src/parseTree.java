@@ -8,11 +8,17 @@ public class parseTree {
         node curParseNode = new node();
         curParseNode.name = label;
 
+        // Setting the root node and the parent node for a current tree
         if (this.rootNode != null) {
             curParseNode.parent = currentNode;
         } else {
             this.rootNode = curParseNode;
             curParseNode.parent = null;
+        }
+
+        // Check to see if the node is a leaf node
+        if (true) {
+
         }
 
     }
