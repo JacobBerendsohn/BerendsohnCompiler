@@ -3,7 +3,7 @@ public class parseTree {
     node rootNode = null;
     node currentNode = null;
 
-    public void addNode(String kind, String label) {
+    public void addNode(String kind, String label, Boolean isLeaf) {
         // Creating the node to be added to the tree and naming it
         node curParseNode = new node();
         curParseNode.name = label;
@@ -17,8 +17,8 @@ public class parseTree {
         }
 
         // Check to see if the node is a leaf node
-        if (true) {
-
+        if (isLeaf) {
+            this.currentNode = curParseNode;
         }
 
     }
