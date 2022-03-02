@@ -37,7 +37,7 @@ public class lexer {
 
         // Printing out the HashMap
         inputLines.forEach((k, v) -> System.out.println("Line: " + k + " Contains: " + v));
-        int curPosInLineArray = 0;
+
         // Beginning Lex
         for (int line = 1; line < inputLines.size() + 1; line++) {
             // Checking if the line contains more than one character to split if need be
@@ -52,8 +52,20 @@ public class lexer {
             }
 
             // Iterating through the new array to run checks on each potential token
-            curPosInLineArray = 0;
-            for (String str : preTokenList) {
+            for (int curPosInLineArray = 0; curPosInLineArray < preTokenList.size(); curPosInLineArray++) {
+
+                // Comment Check
+                if (checkComment(preTokenList, curPosInLineArray, line) != null) {
+                    token commentT = checkComment(preTokenList, curPosInLineArray, line);
+                    curPosInLineArray = commentT.getNewPos();
+                }
+
+                // Quote Check
+                if (checkQuote(preTokenList, curPosInLineArray, line) != null) {
+                    token qT = checkQuote(preTokenList, curPosInLineArray, line);
+                    curPosInLineArray = qT.getNewPos();
+                    tokens.add(qT);
+                }
 
                 // Keyword Check
                 if (checkKeyword(preTokenList, curPosInLineArray, line) != null) {
@@ -62,15 +74,12 @@ public class lexer {
                     for (int i = curPosInLineArray; i <= kwT.getNewPos(); i++) {
                         preTokenList.set(i, null);
                     }
-                    if (kwT.getType().equals("COMMENT")) {
-                        curPosInLineArray = kwT.getNewPos();
-                    } else {
-                        tokens.add(kwT);
-                    }
+                    tokens.add(kwT);
                 }
                 // ID Check
                 if (checkID(preTokenList, curPosInLineArray, line) != null) {
                     token idT = checkID(preTokenList, curPosInLineArray, line);
+
                     for (int i = curPosInLineArray; i <= idT.getNewPos(); i++) {
                         preTokenList.set(i, null);
                     }
@@ -91,9 +100,6 @@ public class lexer {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
                 }
-
-                // Moving pointer to next item in Array
-                curPosInLineArray++;
             }
 
         }
@@ -105,18 +111,6 @@ public class lexer {
     public token checkKeyword(ArrayList<String> currLine, int curPos, int currLineInt) {
 
         if (currLine.get(curPos) != null) {
-            // Block Comment Check
-            if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("/*")) {
-                    return createToken("COMMENT", "COMMENT", "COMMENT", checkComment(currLine, curPos, currLineInt));
-                }
-            }
-            // Quotation check
-            if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("\"")) {
-                    curPos = checkComment(currLine, curPos, currLineInt);
-                }
-            }
             // While check
             if (curPos + 4 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
@@ -195,19 +189,6 @@ public class lexer {
     public token checkID(ArrayList<String> currLine, int curPos, int currLineInt) {
 
         if (currLine.get(curPos) != null) {
-
-            // Block Comment Check
-            if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("/*")) {
-                    curPos = checkComment(currLine, curPos, currLineInt);
-                }
-            }
-            // Quotation check
-            if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("\"")) {
-                    curPos = checkComment(currLine, curPos, currLineInt);
-                }
-            }
             // ID Check
             if (currLine.get(curPos).equalsIgnoreCase("a") || currLine.get(curPos).equalsIgnoreCase("b")
                     || currLine.get(curPos).equalsIgnoreCase("c") || currLine.get(curPos).equalsIgnoreCase("d")
@@ -328,29 +309,45 @@ public class lexer {
     }
 
     // Sends back the end position of a quotation in the array
-    public int checkQuote(ArrayList<String> currLine, int startPos, int currLineInt) {
-        for (int i = startPos; i < currLine.size(); i++) {
-            if ((currLine.get(i)).equals("\"")) {
-                return i + 1;
+    public token checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
+        if (currLine.get(curPos) != null) {
+            // Checking space for comments
+            if ((currLine.get(curPos)).equals("\"")) {
+                for (int i = curPos + 1; i < currLine.size(); i++) {
+                    if ((currLine.get(i)).equals("\"")) {
+                        return createToken("STRING_EXPR", "\"...\"",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + " - "
+                                        + Integer.toString(i),
+                                i + 1);
+                    }
+                }
+                createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
+                        "Missing '\"' to end String");
             }
         }
-        createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
-                "Missing ' \" ' to end quotation");
-        return startPos;
+        return null;
     }
 
     // Sends back the end position of a block comment in the array
-    public int checkComment(ArrayList<String> currLine, int startPos, int currLineInt) {
-        for (int i = startPos; i < currLine.size(); i++) {
-            if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
-                // System.out.println("CheckCOmment Test");
-                return i + 2;
+    public token checkComment(ArrayList<String> currLine, int curPos, int currLineInt) {
+        if (currLine.get(curPos) != null) {
+            // Checking space for comments
+            if (curPos + 1 < currLine.size()) {
+                if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
+                    for (int i = curPos; i < currLine.size(); i++) {
+                        if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
+                            return createToken("COMMENT", "COMMENT",
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 2);
+                        }
+                    }
+                    createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
+                            "Missing '*/' to end Block");
+                }
             }
         }
-        createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
-                "Missing '*/' to end Block");
+
         // System.out.println("CheckCOmment Test 3");
-        return startPos;
+        return null;
     }
 
     // Creates a warning for the user but does not stop the lex
