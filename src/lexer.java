@@ -37,7 +37,7 @@ public class lexer {
 
         // Printing out the HashMap
         inputLines.forEach((k, v) -> System.out.println("Line: " + k + " Contains: " + v));
-
+        int curPosInLineArray = 0;
         // Beginning Lex
         for (int line = 1; line < inputLines.size() + 1; line++) {
             // Checking if the line contains more than one character to split if need be
@@ -52,7 +52,7 @@ public class lexer {
             }
 
             // Iterating through the new array to run checks on each potential token
-            int curPosInLineArray = 0;
+            curPosInLineArray = 0;
             for (String str : preTokenList) {
 
                 // Keyword Check
@@ -62,7 +62,11 @@ public class lexer {
                     for (int i = curPosInLineArray; i <= kwT.getNewPos(); i++) {
                         preTokenList.set(i, null);
                     }
-                    tokens.add(kwT);
+                    if (kwT.getType().equals("COMMENT")) {
+                        curPosInLineArray = kwT.getNewPos();
+                    } else {
+                        tokens.add(kwT);
+                    }
                 }
                 // ID Check
                 if (checkID(preTokenList, curPosInLineArray, line) != null) {
@@ -104,7 +108,7 @@ public class lexer {
             // Block Comment Check
             if (curPos + 1 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("/*")) {
-                    curPos = checkComment(currLine, curPos, currLineInt);
+                    return createToken("COMMENT", "COMMENT", "COMMENT", checkComment(currLine, curPos, currLineInt));
                 }
             }
             // Quotation check
@@ -340,7 +344,7 @@ public class lexer {
         for (int i = startPos; i < currLine.size(); i++) {
             if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
                 // System.out.println("CheckCOmment Test");
-                return i + 1;
+                return i + 2;
             }
         }
         createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(startPos),
