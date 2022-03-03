@@ -106,7 +106,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse();
+                    runParse(line, inputLines);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -123,7 +123,7 @@ public class lexer {
         return tokens;
     }
 
-    public void runParse() {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -140,12 +140,16 @@ public class lexer {
                     ////////
                     tokens.clear();
                     createInfo("Lex Complete with " + warningCount + " warning(s)\n");
-                    createInfo("Lexing program " + programCount + "...");
+                    if (inputLines.get(currLine + 1) != null) {
+                        createInfo("Lexing program " + programCount + "...");
+                    }
                     errorCount = 0;
                 } else {
                     tokens.clear();
                     createInfo("Lex failed with " + errorCount + " error(s)\n");
-                    createInfo("Lexing program " + programCount + "...");
+                    if (inputLines.get(currLine + 1) != null) {
+                        createInfo("Lexing program " + programCount + "...");
+                    }
                     errorCount = 0;
                 }
             }
@@ -349,7 +353,7 @@ public class lexer {
             if ((currLine.get(curPos)).equals("\"")) {
                 for (int i = curPos + 1; i < currLine.size(); i++) {
                     if ((currLine.get(i)).equals("\"")) {
-                        // Checking if current line ends after quotation
+                        // Checking if current line ends to avoid null pointer
                         if (currLine.size() == curPos) {
                             preTokenList.add(" ");
                         }
@@ -375,6 +379,7 @@ public class lexer {
                     if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
                         for (int i = curPos; i < currLine.size(); i++) {
                             if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
+                                // Checking if current line ends to avoid null pointer
                                 if (currLine.size() == curPos) {
                                     preTokenList.add(" ");
                                 }
@@ -397,6 +402,7 @@ public class lexer {
     // Creates a warning for the user but does not stop the lex
     public void createWarning(String position, String message) {
         System.out.println("WARNING Lexer - Position: (" + position + ") Warning: " + message);
+        warningCount++;
     }
 
     public void createError(String position, String message) {
