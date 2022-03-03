@@ -300,10 +300,10 @@ public class lexer {
             if (curPos + 4 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
-                        + currLine.get(curPos + 4)).equalsIgnoreCase("print")) {
+                        + currLine.get(curPos + 4)).equalsIgnoreCase("false")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3)
-                            + currLine.get(curPos + 4)).equals("print")) {
+                            + currLine.get(curPos + 4)).equals("false")) {
                         return createToken("BOOLEAN_VALUE", "false",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
                     } else {

@@ -1,25 +1,22 @@
+{1 = 2}$
+{}$
+{{{{{{}}}}}}$
+{{{{{{}}}}}$
+{print("")}$
+{print(a)}$
+{print(2)}$
+{print("a")}$
+{print(false)}$
+{print("inta")}$
+print(a){print(a)}$
+{a=1}$
+{a = 1}$
+{a = 1 + 2 + 3 + 4   +    5}$
 {
-    While
+    int a
+    a = a
+    string b
+    a = b
 }$
-
-{
-    bOolean A
-    /*This is a Comment*/print
-}$
-
-{{{{{{{}}}}}}}$
-
-{
-    /* No lex
-    int h */
-}$
-
-{
-    "quotes"
-}$
-
-{
-    "double
-    quotes"
-}$
-
+{int a a=a string b a=b}$
+{{{{{{a=1+2+3+4+5{print(4+a)}}}}}}}$
