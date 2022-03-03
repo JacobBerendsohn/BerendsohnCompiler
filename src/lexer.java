@@ -448,6 +448,7 @@ public class lexer {
 
     // Sends back the end position of a quotation in the array
     public token checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
+        ArrayList<String> quote = new ArrayList<String>();
         if (currLine.get(curPos) != null) {
             // Checking space for comments
             if ((currLine.get(curPos)).equals("\"")) {
@@ -457,8 +458,12 @@ public class lexer {
                         if (currLine.size() == curPos) {
                             preTokenList.add(" ");
                         }
-                        return createToken("STRING_EXPR", "\"...\"",
-                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + " - "
+                        // Getting the quotes value to add to the token
+                        for (int j = curPos; j <= i; j++) {
+                            quote.add(currLine.get(j));
+                        }
+                        return createToken("STRING_EXPR", String.join("", quote),
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
                                         + Integer.toString(i),
                                 i);
                     }
