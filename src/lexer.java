@@ -30,9 +30,11 @@ public class lexer {
             int currLine = 1;
             while (line != null) {
                 // Adding each line from input to a single string
-                inputLines.put(currLine, line);
+                if (!"".equals(line)) {
+                    inputLines.put(currLine, line);
+                    currLine++;
+                }
                 line = reader.readLine();
-                currLine++;
             }
         } catch (Exception e) {
             e.printStackTrace();
