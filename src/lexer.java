@@ -10,6 +10,7 @@ public class lexer {
     public ArrayList<token> tokens = new ArrayList<token>();
     public ArrayList<String> preTokenList = new ArrayList<String>();
     public String languageString[][];
+    public int ErrorCount = 0;
 
     // Add a varibla to store the current position, reference that instead of
     // passing the current position between functions
@@ -365,6 +366,7 @@ public class lexer {
 
     public void createError(String position, String message) {
         System.out.println("ERROR Lexer - Position: (" + position + ") Error: " + message);
+        ErrorCount++;
     }
 
     // Creates a token object
