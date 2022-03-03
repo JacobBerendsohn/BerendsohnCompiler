@@ -1,3 +1,50 @@
+{1 = 2}$
+{}$
+{{{{{{}}}}}}$
+{{{{{{}}}}}$
+{print("")}$
+{print(a)}$
+{print(2)}$
+{print("a")}$
+{print(false)}$
+{print("inta")}$
+print(a){print(a)}$
+{a=1}$
+{a = 1}$
+{a = 1 + 2 + 3 + 4   +    5}$
 {
-    "hello"
+    int a
+    a = a
+    string b
+    a = b
 }$
+{int a a=a string b a=b}$
+{{{{{{a=1+2+3+4+5{print(4+a)}}}}}}}$
+{
+    /* what about comments */
+    a="string"
+}$
+{
+    boolean d
+    d = ("string" != "string")
+}$
+{intfintif=2}$
+{
+    /* almost every token */ ()
+    print=whileif"intstring"
+    intstringbooleanfalse
+    true
+    ==!=+ a 0123456789
+}$
+{
+    "two
+    lines"
+}$
+{print("No Caps Mister Bond")}$
+{print("no digits 007")}$
+{int A}$
+{
+    ~!@#%^&*_+{}|:<>?[];',./
+    bool ean d
+}$
+{a!2}$

@@ -71,7 +71,12 @@ public class lexer {
                 if (checkQuote(preTokenList, curPosInLineArray, line) != null) {
                     token qT = checkQuote(preTokenList, curPosInLineArray, line);
                     curPosInLineArray = qT.getNewPos();
-                    tokens.add(qT);
+                    if (!qT.getType().equals("ERROR")) {
+                        tokens.add(qT);
+                    } else {
+                        createError(qT.getLine(),
+                                "Illegal characters in quote: " + qT.getValue());
+                    }
                 } else
 
                 // Keyword Check
@@ -462,10 +467,29 @@ public class lexer {
                         for (int j = curPos; j <= i; j++) {
                             quote.add(currLine.get(j));
                         }
-                        return createToken("STRING_EXPR", String.join("", quote),
-                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
-                                        + Integer.toString(i),
-                                i);
+                        if (quote.contains("A") || quote.contains("B") || quote.contains("C") || quote.contains("D")
+                                || quote.contains("E") || quote.contains("F") || quote.contains("G")
+                                || quote.contains("H") || quote.contains("I") || quote.contains("J")
+                                || quote.contains("K") || quote.contains("L") || quote.contains("M")
+                                || quote.contains("N") || quote.contains("O") || quote.contains("P")
+                                || quote.contains("Q") || quote.contains("R") || quote.contains("S")
+                                || quote.contains("T") || quote.contains("U") || quote.contains("V")
+                                || quote.contains("W") || quote.contains("X") || quote.contains("Y")
+                                || quote.contains("Z") || quote.contains("1") || quote.contains("2")
+                                || quote.contains("3") || quote.contains("4") || quote.contains("5")
+                                || quote.contains("6") || quote.contains("7") || quote.contains("8")
+                                || quote.contains("9") || quote.contains("0")) {
+                            return createToken("ERROR", String.join("", quote),
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
+                                            + Integer.toString(i),
+                                    i);
+                        } else {
+                            return createToken("STRING_EXPR", String.join("", quote),
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
+                                            + Integer.toString(i),
+                                    i);
+                        }
+
                     }
                 }
                 createError(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
