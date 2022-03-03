@@ -164,8 +164,13 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4)).equalsIgnoreCase("while")) {
-                    return createToken("WHILE_STATEMENT", "while",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3)
+                            + currLine.get(curPos + 4)).equals("while")) {
+
+                        return createToken("WHILE_STATEMENT", "while",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    }
                 }
             }
             // Print check
@@ -173,23 +178,32 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4)).equalsIgnoreCase("print")) {
-                    return createToken("PRINT_STATEMENT", "print",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3)
+                            + currLine.get(curPos + 4)).equals("print")) {
+                        return createToken("PRINT_STATEMENT", "print",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    }
                 }
             }
             // If check
             if (curPos + 1 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1)).equalsIgnoreCase("if")) {
-                    return createToken("IF_STATEMENT", "if",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1)).equals("if")) {
+                        return createToken("IF_STATEMENT", "if",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                    }
                 }
             }
             // Int check
             if (curPos + 2 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2))
                         .equalsIgnoreCase("int")) {
-                    return createToken("INT_TYPE", "int",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 2);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2))
+                            .equals("int")) {
+                        return createToken("INT_TYPE", "int",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 2);
+                    }
                 }
             }
             // String check
@@ -197,8 +211,12 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4) + currLine.get(curPos + 5)).equalsIgnoreCase("string")) {
-                    return createToken("STRING_TYPE", "string",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 5);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3)
+                            + currLine.get(curPos + 4) + currLine.get(curPos + 5)).equals("string")) {
+                        return createToken("STRING_TYPE", "string",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 5);
+                    }
                 }
             }
             // Boolean check
@@ -207,8 +225,13 @@ public class lexer {
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
                                 .equalsIgnoreCase("boolean")) {
-                    return createToken("BOOLEAN_TYPE", "boolean",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 6);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3)
+                            + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
+                                    .equals("boolean")) {
+                        return createToken("BOOLEAN_TYPE", "boolean",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 6);
+                    }
                 }
             }
             // True check
@@ -216,8 +239,12 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3))
                                 .equalsIgnoreCase("true")) {
-                    return createToken("BOOLEAN_VALUE", "true",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 3);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3))
+                                    .equals("true")) {
+                        return createToken("BOOLEAN_VALUE", "true",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 3);
+                    }
                 }
             }
             // False check
@@ -225,8 +252,12 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4)).equalsIgnoreCase("print")) {
-                    return createToken("BOOLEAN_VALUE", "false",
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
+                            + currLine.get(curPos + 3)
+                            + currLine.get(curPos + 4)).equals("print")) {
+                        return createToken("BOOLEAN_VALUE", "false",
+                                Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 4);
+                    }
                 }
 
             }
@@ -252,9 +283,23 @@ public class lexer {
                     || currLine.get(curPos).equalsIgnoreCase("w") || currLine.get(curPos).equalsIgnoreCase("x")
                     || currLine.get(curPos).equalsIgnoreCase("y") || currLine.get(curPos).equalsIgnoreCase("z")) {
 
+                if (currLine.get(curPos).equals("a") || currLine.get(curPos).equals("b")
+                        || currLine.get(curPos).equals("c") || currLine.get(curPos).equals("d")
+                        || currLine.get(curPos).equals("e") || currLine.get(curPos).equals("f")
+                        || currLine.get(curPos).equals("g") || currLine.get(curPos).equals("h")
+                        || currLine.get(curPos).equals("i") || currLine.get(curPos).equals("j")
+                        || currLine.get(curPos).equals("k") || currLine.get(curPos).equals("l")
+                        || currLine.get(curPos).equals("m") || currLine.get(curPos).equals("n")
+                        || currLine.get(curPos).equals("o") || currLine.get(curPos).equals("p")
+                        || currLine.get(curPos).equals("q") || currLine.get(curPos).equals("r")
+                        || currLine.get(curPos).equals("s") || currLine.get(curPos).equals("t")
+                        || currLine.get(curPos).equals("u") || currLine.get(curPos).equals("v")
+                        || currLine.get(curPos).equals("w") || currLine.get(curPos).equals("x")
+                        || currLine.get(curPos).equals("y") || currLine.get(curPos).equals("z")) {
+                    return createToken("ID", currLine.get(curPos),
+                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
+                }
                 // Creating token for ID
-                return createToken("ID", currLine.get(curPos),
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
 
             }
         }
