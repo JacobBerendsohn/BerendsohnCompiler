@@ -10,7 +10,6 @@ public class lexer {
     public ArrayList<token> tokens = new ArrayList<token>();
     public ArrayList<String> preTokenList = new ArrayList<String>();
     public String languageString[][];
-    public Boolean isQuote = false;
 
     // Add a varibla to store the current position, reference that instead of
     // passing the current position between functions
@@ -37,6 +36,8 @@ public class lexer {
 
         // Printing out the HashMap
         inputLines.forEach((k, v) -> System.out.println("Line: " + k + " Contains: " + v));
+
+        System.out.println("\n\nINFO Lexer - LEX Beginning for Program 1");
 
         // Beginning Lex
         for (int line = 1; line < inputLines.size() + 1; line++) {
@@ -278,10 +279,6 @@ public class lexer {
         return null;
     }
 
-    public token checkCharacters(String[] currLine, int curPos, int currLineInt) {
-        return null;
-    }
-
     public token checkEOP(ArrayList<String> currLine, int curPos, int currLineInt) {
         if (currLine.get(curPos) != null) {
             // Checking for end operator
@@ -294,15 +291,23 @@ public class lexer {
     }
 
     public void debug(ArrayList<token> tokens) {
-        for (token t : tokens) {
-            if (t.getType().equals("END_OP")) {
+        int programNum = 2;
+        for (int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).getType().equals("END_OP")) {
                 System.out.println(
-                        "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+                        "DEBUG Lexer - " + tokens.get(i).getType() + " [  " + tokens.get(i).getValue()
+                                + "  ] found at (" + tokens.get(i).getLine() + ")");
                 System.out.println(
-                        "INFO Lexer - LEX completed with ? errors");
+                        "INFO Lexer - LEX completed with ? errors \n\n");
+                if (i + 1 < tokens.size()) {
+                    System.out.println(
+                            "INFO Lexer - LEX Beginning for Program " + programNum);
+                }
+                programNum++;
             } else {
                 System.out.println(
-                        "DEBUG Lexer - " + t.getType() + " [  " + t.getValue() + "  ] found at (" + t.getLine() + ")");
+                        "DEBUG Lexer - " + tokens.get(i).getType() + " [  " + tokens.get(i).getValue()
+                                + "  ] found at (" + tokens.get(i).getLine() + ")");
             }
 
         }
@@ -315,6 +320,8 @@ public class lexer {
             if ((currLine.get(curPos)).equals("\"")) {
                 for (int i = curPos + 1; i < currLine.size(); i++) {
                     if ((currLine.get(i)).equals("\"")) {
+                        // Checking if current line ends after quotation
+                        preTokenList.add(" ");
                         return createToken("STRING_EXPR", "\"...\"",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + " - "
                                         + Integer.toString(i),
@@ -336,6 +343,7 @@ public class lexer {
                 if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
                     for (int i = curPos; i < currLine.size(); i++) {
                         if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
+                            preTokenList.add(" ");
                             return createToken("COMMENT", "COMMENT",
                                     Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 2);
                         }
@@ -352,7 +360,11 @@ public class lexer {
 
     // Creates a warning for the user but does not stop the lex
     public void createWarning(String position, String message) {
-        System.out.println("WARNING Lexer - Position: (" + position + ") Message: " + message);
+        System.out.println("WARNING Lexer - Position: (" + position + ") Warning: " + message);
+    }
+
+    public void createError(String position, String message) {
+        System.out.println("ERROR Lexer - Position: (" + position + ") Error: " + message);
     }
 
     // Creates a token object
