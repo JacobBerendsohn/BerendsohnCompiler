@@ -1,68 +1,34 @@
-{1 = 2}$
-{}$
-{{{{{{}}}}}}$
-{{{{{{}}}}}$
-{print("")}$
-{print(a)}$
-{print(2)}$
-{print("a")}$
-{print(false)}$
-{print("inta")}$
-print(a){print(a)}$
-{a=1}$
-{a = 1}$
-{a = 1 + 2 + 3 + 4   +    5}$
 {
-    int a
-    a = a
-    string b
-    a = b
-}$
-{int a a=a string b a=b}$
-{{{{{{a=1+2+3+4+5{print(4+a)}}}}}}}$
-{
-    /* what about comments */
-    a="string"
+    "double
+    quote"
 }$
 {
-    boolean d
-    d = ("string" != "string")
+    /* unterminated
+    quote*/
 }$
-{intfintif=2}$
 {
-    /* almost every token */ ()
-    print=whileif"intstring"
-    intstringbooleanfalse
-    true
-    ==!=+ a 0123456789
+    "real quote"
 }$
-
-/* code that should error */
-
 {
-    "two
-    lines"
+    /* real comment */print a
+    int a = 1
 }$
-{print("No Caps Mister Bond")}$
-{print("no digits 007")}$
-{int A}$
+{{{{{}}}}}$
+{{{{{}}}}$
 {
-    ~!@#%^&*_+{}|:<>?[];',./
-    bool ean d
+    i = if
+    fint a
+    print 1 = 9
 }$
-{a!2}$
-
-/* questionable code */
-
-{"$"}$
-{ int a /* unterminated comment }$
-{ a = "unterminated string }$
 {
-    string s
-    s = "this string is /* in */ visible"
+    print("hello")
+    1 == 3
+    1 != 1
 }$
-{intii=0stringss="hello"booleanbb=(true==(1!
-=2))if(b==true){while(true!=(b!=false==(2!=3))))
-{i=1+iprint(s)}}print("ugly code")}$
-{print(007)}$
-{a=12}$
+{
+    {({})()}false
+}$
+{
+    "CAPS in quotes"
+    "numbers in qu0t3s"
+}$
