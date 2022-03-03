@@ -348,11 +348,13 @@ public class lexer {
                 for (int i = curPos + 1; i < currLine.size(); i++) {
                     if ((currLine.get(i)).equals("\"")) {
                         // Checking if current line ends after quotation
-                        preTokenList.add(" ");
+                        if (currLine.size() == curPos) {
+                            preTokenList.add(" ");
+                        }
                         return createToken("STRING_EXPR", "\"...\"",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + " - "
                                         + Integer.toString(i),
-                                i + 1);
+                                i);
                     }
                 }
                 createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
@@ -370,9 +372,11 @@ public class lexer {
                 if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
                     for (int i = curPos; i < currLine.size(); i++) {
                         if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
-                            preTokenList.add(" ");
+                            if (currLine.size() == curPos) {
+                                preTokenList.add(" ");
+                            }
                             return createToken("COMMENT", "COMMENT",
-                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 2);
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 1);
                         }
                     }
                     createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
