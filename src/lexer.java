@@ -110,8 +110,8 @@ public class lexer {
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
-                        && !preTokenList.get(curPosInLineArray).equals("\n")
-                        && !preTokenList.get(curPosInLineArray).equals("\r")) {
+                        && !preTokenList.get(curPosInLineArray).equals("/")
+                        && !preTokenList.get(curPosInLineArray).equals("*")) {
                     createError(line + ":" + curPosInLineArray,
                             "Unrecognized Token: " + preTokenList.get(curPosInLineArray));
                 }
@@ -363,7 +363,7 @@ public class lexer {
                                 i);
                     }
                 }
-                createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
+                createError(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
                         "Missing '\"' to end String");
             }
         }
@@ -391,7 +391,7 @@ public class lexer {
                 }
             }
         } catch (Exception e) {
-            createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
+            createError(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
                     "Missing '*/' to end Block");
         }
 
