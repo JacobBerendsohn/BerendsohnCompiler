@@ -102,6 +102,16 @@ public class lexer {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
                 }
+                // Unrecognized Token Check
+                if (preTokenList.get(curPosInLineArray) != null && preTokenList.get(curPosInLineArray) != " ") {
+                    createError(line + ":" + curPosInLineArray,
+                            "Unrecognized Token: " + preTokenList.get(curPosInLineArray));
+                }
+
+                // Check for end of program to run Parse and then Lex next Program
+                if (tokens.get(tokens.size()).getValue().equals("$")) {
+
+                }
             }
 
         }
