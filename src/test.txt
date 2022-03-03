@@ -36,6 +36,9 @@ print(a){print(a)}$
     true
     ==!=+ a 0123456789
 }$
+
+/* code that should error */
+
 {
     "two
     lines"
@@ -48,3 +51,18 @@ print(a){print(a)}$
     bool ean d
 }$
 {a!2}$
+
+/* questionable code */
+
+{"$"}$
+{ int a /* unterminated comment }$
+{ a = "unterminated string }$
+{
+    string s
+    s = "this string is /* in */ visible"
+}$
+{intii=0stringss="hello"booleanbb=(true==(1!
+=2))if(b==true){while(true!=(b!=false==(2!=3))))
+{i=1+iprint(s)}}print("ugly code")}$
+{print(007)}$
+{a=12}$
