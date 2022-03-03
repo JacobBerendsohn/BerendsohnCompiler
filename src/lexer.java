@@ -368,23 +368,26 @@ public class lexer {
 
     // Sends back the end position of a block comment in the array
     public token checkComment(ArrayList<String> currLine, int curPos, int currLineInt) {
-        if (currLine.get(curPos) != null) {
-            // Checking space for comments
-            if (curPos + 1 < currLine.size()) {
-                if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
-                    for (int i = curPos; i < currLine.size(); i++) {
-                        if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
-                            if (currLine.size() == curPos) {
-                                preTokenList.add(" ");
+        try {
+            if (currLine.get(curPos) != null) {
+                // Checking space for comments
+                if (curPos + 1 < currLine.size()) {
+                    if ((currLine.get(curPos) + (currLine.get(curPos + 1))).equals("/*")) {
+                        for (int i = curPos; i < currLine.size(); i++) {
+                            if ((currLine.get(i) + currLine.get(i + 1)).equals("*/")) {
+                                if (currLine.size() == curPos) {
+                                    preTokenList.add(" ");
+                                }
+                                return createToken("COMMENT", "COMMENT",
+                                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 1);
                             }
-                            return createToken("COMMENT", "COMMENT",
-                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i + 1);
                         }
                     }
-                    createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
-                            "Missing '*/' to end Block");
                 }
             }
+        } catch (Exception e) {
+            createWarning(Integer.toString(currLineInt) + ":" + Integer.toString(curPos),
+                    "Missing '*/' to end Block");
         }
 
         // System.out.println("CheckCOmment Test 3");
