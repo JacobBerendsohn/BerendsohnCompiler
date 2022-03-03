@@ -140,6 +140,7 @@ public class lexer {
         return tokens;
     }
 
+    // Ends lex for each individual program and sends it through parsing
     public void runParse(int currLine, HashMap<Integer, String> inputLines) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
@@ -173,6 +174,7 @@ public class lexer {
         }
     }
 
+    // Checks for keywords found in the grammar
     public token checkKeyword(ArrayList<String> currLine, int curPos, int currLineInt) {
 
         if (currLine.get(curPos) != null) {
@@ -416,6 +418,7 @@ public class lexer {
         return null;
     }
 
+    // Checks for individual numbers
     public token checkDigit(ArrayList<String> currLine, int curPos, int currLineInt) {
         if (currLine.get(curPos) != null) {
             if (currLine.get(curPos).equals("0") || currLine.get(curPos).equals("1") || currLine.get(curPos).equals("2")
@@ -442,6 +445,7 @@ public class lexer {
         return null;
     }
 
+    // Debug function to display token values
     public void debug(ArrayList<token> tokens) {
         for (int i = 0; i < tokens.size(); i++) {
             System.out.println(
@@ -463,7 +467,7 @@ public class lexer {
                         if (currLine.size() == curPos) {
                             preTokenList.add(" ");
                         }
-                        // Getting the quotes value to add to the token
+                        // Getting the quotes value to add to the token (Concatenation)
                         for (int j = curPos; j <= i; j++) {
                             quote.add(currLine.get(j));
                         }
@@ -479,11 +483,13 @@ public class lexer {
                                 || quote.contains("3") || quote.contains("4") || quote.contains("5")
                                 || quote.contains("6") || quote.contains("7") || quote.contains("8")
                                 || quote.contains("9") || quote.contains("0")) {
+                            // Creating error token if a quote contains illegal characters
                             return createToken("ERROR", String.join("", quote),
                                     Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
                                             + Integer.toString(i),
                                     i);
                         } else {
+                            // Sending back the real token if it contains no illegal characters
                             return createToken("STRING_EXPR", String.join("", quote),
                                     Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
                                             + Integer.toString(i),
@@ -528,17 +534,19 @@ public class lexer {
         return null;
     }
 
-    // Creates a warning for the user but does not stop the lex
+    // Creates a warning with a message to display
     public void createWarning(String position, String message) {
         System.out.println("WARNING Lexer - Position: (" + position + ") Warning: " + message);
         warningCount++;
     }
 
+    // Creates an error to display and stop lex
     public void createError(String position, String message) {
         System.out.println("ERROR Lexer - Position: (" + position + ") Error: " + message);
         errorCount++;
     }
 
+    // Creates a message with information to display
     public void createInfo(String message) {
         System.out.println("INFO Lexer - " + message);
     }
