@@ -20,7 +20,7 @@ Open a terminal, and compile the code to be run using the command javac compiler
 
 Once the code is compiled, run the program using the command java compiler. <br>
 
-To input a file with test languages, place a '.txt' file in the 'src' folder and add is as an argument when starting compiler. <br>
+To input a file with test languages, place a '.txt' file in the 'src' folder and add it as an argument when starting compiler. <br>
 
 ## Development help
 
