@@ -122,7 +122,8 @@ public class lexer {
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
                         && !preTokenList.get(curPosInLineArray).equals("/")
-                        && !preTokenList.get(curPosInLineArray).equals("*")) {
+                        && !preTokenList.get(curPosInLineArray).equals("*")
+                        && !preTokenList.get(curPosInLineArray).equals("\"")) {
                     createError(line + ":" + curPosInLineArray,
                             "Unrecognized Token: " + preTokenList.get(curPosInLineArray));
                 }
