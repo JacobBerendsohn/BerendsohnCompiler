@@ -1,0 +1,25 @@
+{
+    While
+}$
+
+{
+    bOolean A
+    /*This is a Comment*/print
+}$
+
+{{{{{{{}}}}}}}$
+
+{
+    /* No lex
+    int h */
+}$
+
+{
+    "quotes"
+}$
+
+{
+    "double
+    quotes"
+}$
+
