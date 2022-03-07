@@ -21,24 +21,54 @@ public class parser {
     public void match(String expected) {
         if (expected.equals(tokens.get(currTokenInArray).getValue())) {
             currTree.addNode(expected, true);
+            currTokenInArray++;
         } else {
             // Add error handling
         }
     }
 
     public void parseBlock() {
-
+        currTree.addNode("Block", false);
+        match("{");
+        parseStatementList();
+        match("}");
+        currTree.executeOrder66();
     }
 
     public void parseStatementList() {
+        currTree.addNode("StatementList", false);
+        parseStatement();
+        parseStatementList();
+
+        // Figure out what to do with empty string
 
     }
 
     public void parseStatement() {
-
+        currTree.addNode("Statement", false);
+        if (tokens.get(currTokenInArray).getValue().equals("print")) {
+            parsePrintStatement();
+        } else if (tokens.get(currTokenInArray).getType().equals("ID")
+                && tokens.get(currTokenInArray + 1).getType().equals("ASSIGN")) {
+            parseAssignmentStatement();
+        } else if (tokens.get(currTokenInArray).getType().equals("ID")
+                && (tokens.get(currTokenInArray).getValue().equals("int")
+                        || tokens.get(currTokenInArray).getValue().equals("string")
+                        || tokens.get(currTokenInArray).getValue().equals("boolean"))) {
+            parseVarDecl();
+        } else if (tokens.get(currTokenInArray).getValue().equals("while")) {
+            parseWhileStatement();
+        } else if (tokens.get(currTokenInArray).getValue().equals("if")) {
+            parseIfStatement();
+        } else if (tokens.get(currTokenInArray).getValue().equals("{")) {
+            parseBlock();
+        } else {
+            // Error Handling
+        }
     }
 
     public void parsePrintStatement() {
+        currTree.addNode("PrintStatement", false);
 
     }
 
