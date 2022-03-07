@@ -28,7 +28,7 @@ public class parser {
         }
     }
 
-    public void matchChar(String regEx) {
+    public void matchRegEx(String regEx) {
         if (tokens.get(currTokenInArray).getValue().matches(regEx)) {
             currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
             currTokenInArray++;
@@ -200,8 +200,9 @@ public class parser {
 
     public void parseChar() {
         currTree.addNode("Char", false);
+        // Using regEx instead of a bunch of ifs to see if token is in alphabet
         if (tokens.get(currTokenInArray).getValue().matches("[a-z]+")) {
-            matchChar("[a-z]+");
+            matchRegEx("[a-z]+");
         } else {
             // Error Handling
         }
@@ -210,21 +211,47 @@ public class parser {
 
     public void parseSpace() {
         currTree.addNode("Space", false);
+        match(" ");
     }
 
     public void parseDigit() {
         currTree.addNode("Digit", false);
+        // Using regEx instead of a bunch of ifs to see if token is a digit
+        if (tokens.get(currTokenInArray).getValue().matches("[0-9]+")) {
+            matchRegEx("[0-9]+");
+        } else {
+            // Error Handling
+        }
+        currTree.executeOrder66();
     }
 
     public void parseBoolOp() {
         currTree.addNode("BoolOp", false);
+        if (tokens.get(currTokenInArray).getValue().equals("==")) {
+            match("==");
+        } else if (tokens.get(currTokenInArray).getValue().equals("!=")) {
+            match("!=");
+        } else {
+            // Error handling
+        }
+        currTree.executeOrder66();
     }
 
     public void parseBoolVal() {
         currTree.addNode("BoolVal", false);
+        if (tokens.get(currTokenInArray).getValue().equals("true")) {
+            match("true");
+        } else if (tokens.get(currTokenInArray).getValue().equals("false")) {
+            match("false");
+        } else {
+            // Error handling
+        }
+        currTree.executeOrder66();
     }
 
     public void parseIntOp() {
         currTree.addNode("IntOp", false);
+        match("+");
+        currTree.executeOrder66();
     }
 }
