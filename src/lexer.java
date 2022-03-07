@@ -331,39 +331,11 @@ public class lexer {
 
         if (currLine.get(curPos) != null) {
             // ID Check
-            if (currLine.get(curPos).equalsIgnoreCase("a") || currLine.get(curPos).equalsIgnoreCase("b")
-                    || currLine.get(curPos).equalsIgnoreCase("c") || currLine.get(curPos).equalsIgnoreCase("d")
-                    || currLine.get(curPos).equalsIgnoreCase("e") || currLine.get(curPos).equalsIgnoreCase("f")
-                    || currLine.get(curPos).equalsIgnoreCase("g") || currLine.get(curPos).equalsIgnoreCase("h")
-                    || currLine.get(curPos).equalsIgnoreCase("i") || currLine.get(curPos).equalsIgnoreCase("j")
-                    || currLine.get(curPos).equalsIgnoreCase("k") || currLine.get(curPos).equalsIgnoreCase("l")
-                    || currLine.get(curPos).equalsIgnoreCase("m") || currLine.get(curPos).equalsIgnoreCase("n")
-                    || currLine.get(curPos).equalsIgnoreCase("o") || currLine.get(curPos).equalsIgnoreCase("p")
-                    || currLine.get(curPos).equalsIgnoreCase("q") || currLine.get(curPos).equalsIgnoreCase("r")
-                    || currLine.get(curPos).equalsIgnoreCase("s") || currLine.get(curPos).equalsIgnoreCase("t")
-                    || currLine.get(curPos).equalsIgnoreCase("u") || currLine.get(curPos).equalsIgnoreCase("v")
-                    || currLine.get(curPos).equalsIgnoreCase("w") || currLine.get(curPos).equalsIgnoreCase("x")
-                    || currLine.get(curPos).equalsIgnoreCase("y") || currLine.get(curPos).equalsIgnoreCase("z")) {
-
-                if (currLine.get(curPos).equals("a") || currLine.get(curPos).equals("b")
-                        || currLine.get(curPos).equals("c") || currLine.get(curPos).equals("d")
-                        || currLine.get(curPos).equals("e") || currLine.get(curPos).equals("f")
-                        || currLine.get(curPos).equals("g") || currLine.get(curPos).equals("h")
-                        || currLine.get(curPos).equals("i") || currLine.get(curPos).equals("j")
-                        || currLine.get(curPos).equals("k") || currLine.get(curPos).equals("l")
-                        || currLine.get(curPos).equals("m") || currLine.get(curPos).equals("n")
-                        || currLine.get(curPos).equals("o") || currLine.get(curPos).equals("p")
-                        || currLine.get(curPos).equals("q") || currLine.get(curPos).equals("r")
-                        || currLine.get(curPos).equals("s") || currLine.get(curPos).equals("t")
-                        || currLine.get(curPos).equals("u") || currLine.get(curPos).equals("v")
-                        || currLine.get(curPos).equals("w") || currLine.get(curPos).equals("x")
-                        || currLine.get(curPos).equals("y") || currLine.get(curPos).equals("z")) {
-                    return createToken("ID", currLine.get(curPos),
-                            Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
-                }
-                // Creating token for ID
-
+            if (currLine.get(curPos).matches("[a-z]+")) {
+                return createToken("ID", currLine.get(curPos),
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
+            // Creating token for ID
         }
         return null;
     }
@@ -421,12 +393,7 @@ public class lexer {
     // Checks for individual numbers
     public token checkDigit(ArrayList<String> currLine, int curPos, int currLineInt) {
         if (currLine.get(curPos) != null) {
-            if (currLine.get(curPos).equals("0") || currLine.get(curPos).equals("1") || currLine.get(curPos).equals("2")
-                    || currLine.get(curPos).equals("3") || currLine.get(curPos).equals("4")
-                    || currLine.get(curPos).equals("5")
-                    || currLine.get(curPos).equals("6") || currLine.get(curPos).equals("7")
-                    || currLine.get(curPos).equals("8")
-                    || currLine.get(curPos).equals("9")) {
+            if (currLine.get(curPos).matches("[0-9]+")) {
                 return createToken("DIGIT", currLine.get(curPos),
                         Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
             }
