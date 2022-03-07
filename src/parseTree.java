@@ -8,10 +8,29 @@ public class parseTree {
         node curParseNode = new node(label);
         curParseNode.name = label;
 
-        // Check to see if the node is a leaf node
-        if (isLeaf) {
+        // Checking if we have a root node yet, if not make this one the root
+        if (this.rootNode == null) {
+            curParseNode.setRoot(true);
+            this.rootNode = curParseNode;
+        } else {
+            // Setting this nodes parent to the last node parsed
+            curParseNode.setParent(currentNode);
+
+            // Making this current node a child of the last node parsed
+            this.currentNode.addChild(currentNode);
+
+        }
+
+        // Check to see if the node is a leaf node if not, set this node to currNode
+        if (!isLeaf) {
             this.currentNode = curParseNode;
         }
+
+    }
+
+    // Function for ending this lineage of children, or this branch
+    // Taken from "endChildren" in parseTree example
+    public void executeOrder66() {
 
     }
 }

@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import javafx.scene.control.Labeled;
-
 public class node {
     String name = "";
     node parent = null;
