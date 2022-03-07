@@ -2,6 +2,7 @@
 public class parseTree {
     node rootNode = null;
     node currentNode = null;
+    String treeString = "";
 
     public void addNode(String label, Boolean isLeaf) {
         // Creating the node to be added to the tree and naming it
@@ -31,6 +32,43 @@ public class parseTree {
     // Function for ending this lineage of children, or this branch
     // Taken from "endChildren" in parseTree example
     public void executeOrder66() {
+        // Checking that there is a node above this current one in the parse tree
+        if (!currentNode.isRoot() && currentNode.getParent() != null) {
+            // Changing current node to its parent node
+            currentNode = currentNode.getParent();
+        } else {
+            // Add error handling
+        }
+    }
 
+    // Function to visualize our current parse tree
+    public String toString() {
+        treeString = "";
+
+        // Starting recursive drawing function
+        expand(rootNode, 0);
+        return treeString;
+    }
+
+    // Expands the tree to show depth in a 2D way
+    // Taken from treeDemo.js
+    public void expand(node curNode, int depth) {
+        // Adding space for visuals
+        for (int i = 0; i < depth; i++) {
+            treeString += "-";
+        }
+
+        // Checking for leaf nodes
+        if (curNode.children.size() == 0) {
+            treeString += "[" + curNode.getName() + "]\n";
+        } else {
+            // Children present so show interior branches
+            treeString += "<" + curNode.getName() + ">\n";
+
+            // Recursion loop [FUN] :)
+            for (int i = 0; i < curNode.children.size(); i++) {
+                expand(curNode.children.get(i), depth + 1);
+            }
+        }
     }
 }

@@ -46,8 +46,16 @@ public class node {
         this.parent = parent;
     }
 
+    public node getParent() {
+        return this.parent;
+    }
+
     public void setRoot(Boolean root) {
         this.isRoot = root;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public void addLeafToken(token leafT) {
