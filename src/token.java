@@ -12,6 +12,10 @@ public class token {
         this.newPos = newPos;
     }
 
+    public token() {
+
+    }
+
     public String getType() {
         return this.type;
     }
@@ -24,7 +28,7 @@ public class token {
         return this.line;
     }
 
-    public int getNewPos(){
+    public int getNewPos() {
         return this.newPos;
     }
 }

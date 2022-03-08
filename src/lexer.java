@@ -19,7 +19,7 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    public ArrayList<token> lex(File inputFile) {
+    public ArrayList<token> lex(File inputFile, parser parse) {
 
         BufferedReader reader;
 
@@ -126,7 +126,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse(line, inputLines);
+                    runParse(line, inputLines, parse);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -145,7 +145,7 @@ public class lexer {
     }
 
     // Ends lex for each individual program and sends it through parsing
-    public void runParse(int currLine, HashMap<Integer, String> inputLines) {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -160,6 +160,14 @@ public class lexer {
                     ////////
                     // Begin Parse HERE
                     ////////
+
+                    System.out.println("Beginning Parse");
+                    parseTree p = parse.startParse(tokens);
+
+                    ////////
+                    // End Parse HERE
+                    ////////
+
                     tokens.clear();
                     createInfo("Lex Complete with " + warningCount + " warning(s)\n");
                     if (inputLines.get(currLine + 1) != null) {

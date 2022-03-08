@@ -9,16 +9,19 @@ public class parseTree {
         node curParseNode = new node(label);
         curParseNode.name = label;
 
+        System.out.println("Inside AddNode");
         // Checking if we have a root node yet, if not make this one the root
         if (this.rootNode == null) {
             curParseNode.setRoot(true);
             this.rootNode = curParseNode;
+            System.out.println("Inside AddNode IF");
         } else {
             // Setting this nodes parent to the last node parsed
             curParseNode.setParent(currentNode);
 
             // Making this current node a child of the last node parsed
             this.currentNode.addChild(currentNode);
+            System.out.println("Inside AddNode ELSE");
 
         }
 
@@ -42,33 +45,39 @@ public class parseTree {
     }
 
     // Function to visualize our current parse tree
-    public String toString() {
-        treeString = "";
-
-        // Starting recursive drawing function
-        expand(rootNode, 0);
-        return treeString;
-    }
-
-    // Expands the tree to show depth in a 2D way
-    // Taken from treeDemo.js
-    public void expand(node curNode, int depth) {
-        // Adding space for visuals
-        for (int i = 0; i < depth; i++) {
-            treeString += "-";
-        }
-
-        // Checking for leaf nodes
-        if (curNode.children.size() == 0) {
-            treeString += "[" + curNode.getName() + "]\n";
-        } else {
-            // Children present so show interior branches
-            treeString += "<" + curNode.getName() + ">\n";
-
-            // Recursion loop [FUN] :)
-            for (int i = 0; i < curNode.children.size(); i++) {
-                expand(curNode.children.get(i), depth + 1);
-            }
-        }
-    }
+    /*
+     * public String toString() {
+     * treeString = "";
+     * 
+     * // Starting recursive drawing function
+     * System.out.println("Beginning Recursion");
+     * expand(rootNode, 0);
+     * return treeString;
+     * }
+     * 
+     * // Expands the tree to show depth in a 2D way
+     * // Taken from treeDemo.js
+     * public void expand(node curNode, int depth) {
+     * // Adding space for visuals
+     * for (int i = 0; i < depth; i++) {
+     * treeString += "-";
+     * }
+     * 
+     * System.out.println("Tree start");
+     * // Checking for leaf nodes
+     * if (curNode.children.isEmpty()) {
+     * treeString += "[" + curNode.getName() + "]\n";
+     * System.out.println("Base Case");
+     * } else {
+     * System.out.println("Inside Recursion");
+     * // Children present so show interior branches
+     * treeString += "<" + curNode.getName() + ">\n";
+     * 
+     * // Recursion loop [FUN] :)
+     * for (int i = 0; i < curNode.children.size(); i++) {
+     * expand(curNode.children.get(i), depth + 1);
+     * }
+     * }
+     * }
+     */
 }

@@ -6,17 +6,10 @@ public class parser {
     ArrayList<token> tokens = new ArrayList<token>();
     int currTokenInArray = 0;
 
-    public void startParse(ArrayList<token> tokenList) {
+    public parseTree startParse(ArrayList<token> tokenList) {
         this.tokens = tokenList;
         parseProgram();
-    }
-
-    public void parseProgram() {
-        currTree.addNode("Program", false);
-        parseBlock();
-        match("$");
-        currTree.executeOrder66();
-        currTree.toString();
+        return currTree;
     }
 
     public void match(String expected) {
@@ -24,7 +17,7 @@ public class parser {
             currTree.addNode(expected, true);
             currTokenInArray++;
         } else {
-            // Add error handling
+            System.out.println("Error in match");
         }
     }
 
@@ -37,13 +30,12 @@ public class parser {
         }
     }
 
-    public void matchString(String expected) {
-        if (tokens.get(currTokenInArray).getValue().matches(expected)) {
-            currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
-            currTokenInArray++;
-        } else {
-            // Add error handling
-        }
+    public void parseProgram() {
+        currTree.addNode("Program", false);
+        parseBlock();
+        match("$");
+        currTree.executeOrder66();
+        System.out.println("Below order 66 parseProgram");
     }
 
     public void parseBlock() {
@@ -52,6 +44,7 @@ public class parser {
         parseStatementList();
         match("}");
         currTree.executeOrder66();
+        System.out.println("Below order 66 parseBlock");
     }
 
     public void parseStatementList() {
@@ -70,7 +63,7 @@ public class parser {
             parseStatement();
             parseStatementList();
         } else {
-            // empty string handling
+            System.out.println("Empty String in StatementList");
         }
         currTree.executeOrder66();
     }
