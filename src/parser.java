@@ -171,10 +171,10 @@ public class parser {
 
     public void parseStringExpr() {
         currTree.addNode("StringExpr", false);
-        if (tokens.get(currTokenInArray).getValue().split("")[0].equals("\"")) {
-            String sendCharList = tokens.get(currTokenInArray).getValue().split("")[0].substring(1,
-                    tokens.get(currTokenInArray).getValue().split("").length - 2);
-
+        if (tokens.get(currTokenInArray).getValue().equals("\"")) {
+            match("\"");
+            parseCharList();
+            match("\"");
         } else {
             // Error Handling
         }
