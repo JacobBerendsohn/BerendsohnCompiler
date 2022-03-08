@@ -235,7 +235,7 @@ public class lexer {
                         .equalsIgnoreCase("int")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2))
                             .equals("int")) {
-                        return createToken("INT_TYPE", "int",
+                        return createToken("TYPE_INT", "int",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 2);
                     } else {
                         return createToken("ERROR",
@@ -252,7 +252,7 @@ public class lexer {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3)
                             + currLine.get(curPos + 4) + currLine.get(curPos + 5)).equals("string")) {
-                        return createToken("STRING_TYPE", "string",
+                        return createToken("TYPE_STRING", "string",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 5);
                     } else {
                         return createToken("ERROR",
@@ -273,7 +273,7 @@ public class lexer {
                             + currLine.get(curPos + 3)
                             + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
                                     .equals("boolean")) {
-                        return createToken("BOOLEAN_TYPE", "boolean",
+                        return createToken("TYPE_BOOLEAN", "boolean",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 6);
                     } else {
                         return createToken("ERROR",
