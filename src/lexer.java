@@ -69,13 +69,17 @@ public class lexer {
 
                 // Quote Check
                 if (checkQuote(preTokenList, curPosInLineArray, line) != null) {
-                    token qT = checkQuote(preTokenList, curPosInLineArray, line);
-                    curPosInLineArray = qT.getNewPos();
-                    if (!qT.getType().equals("ERROR")) {
-                        tokens.add(qT);
+                    ArrayList<token> qT = checkQuote(preTokenList, curPosInLineArray, line);
+
+                    curPosInLineArray = qT.get(qT.size() - 1).getNewPos();
+
+                    if (!qT.get(0).getType().equals("ERROR")) {
+                        for (token t : qT) {
+                            tokens.add(t);
+                        }
                     } else {
-                        createError(qT.getLine(),
-                                "Illegal characters in quote: " + qT.getValue());
+                        createError(qT.get(0).getLine(),
+                                "Illegal characters in quote: " + qT.get(0).getValue());
                     }
                 } else
 
@@ -423,7 +427,7 @@ public class lexer {
     }
 
     // Sends back the end position of a quotation in the array
-    public token checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
+    public ArrayList<token> checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
         ArrayList<String> quote = new ArrayList<String>();
         if (currLine.get(curPos) != null) {
             // Checking space for comments
@@ -451,16 +455,33 @@ public class lexer {
                                 || quote.contains("6") || quote.contains("7") || quote.contains("8")
                                 || quote.contains("9") || quote.contains("0")) {
                             // Creating error token if a quote contains illegal characters
-                            return createToken("ERROR", String.join("", quote),
+                            ArrayList<token> sendBack = new ArrayList<token>();
+
+                            sendBack.add(createToken("ERROR", String.join("", quote),
                                     Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
                                             + Integer.toString(i),
-                                    i);
+                                    i));
+
+                            return sendBack;
                         } else {
+                            ArrayList<token> sendBack = new ArrayList<token>();
+
+                            // Separating the quotes from the actual quote itself for parse and sending back
+                            // all 3 tokens
+                            sendBack.add(createToken("QUOTE", "\"",
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i));
+
+                            sendBack.add(createToken("STRING_EXPR",
+                                    String.join("", quote).substring(1, String.join("", quote).length() - 1),
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos + 1) + "-"
+                                            + Integer.toString(i - 1),
+                                    i));
+
+                            sendBack.add(createToken("QUOTE", "\"",
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(i), i));
+
                             // Sending back the real token if it contains no illegal characters
-                            return createToken("STRING_EXPR", String.join("", quote),
-                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
-                                            + Integer.toString(i),
-                                    i);
+                            return sendBack;
                         }
 
                     }

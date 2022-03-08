@@ -37,6 +37,15 @@ public class parser {
         }
     }
 
+    public void matchString(String expected) {
+        if (tokens.get(currTokenInArray).getValue().matches(expected)) {
+            currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
+            currTokenInArray++;
+        } else {
+            // Add error handling
+        }
+    }
+
     public void parseBlock() {
         currTree.addNode("Block", false);
         match("{");
@@ -162,7 +171,13 @@ public class parser {
 
     public void parseStringExpr() {
         currTree.addNode("StringExpr", false);
+        if (tokens.get(currTokenInArray).getValue().split("")[0].equals("\"")) {
+            String sendCharList = tokens.get(currTokenInArray).getValue().split("")[0].substring(1,
+                    tokens.get(currTokenInArray).getValue().split("").length - 2);
 
+        } else {
+            // Error Handling
+        }
     }
 
     public void parseBooleanExpr() {
@@ -190,12 +205,22 @@ public class parser {
 
     public void parseCharList() {
         currTree.addNode("CharList", false);
-
+        matchRegEx("[a-z ]+");
+        currTree.executeOrder66();
     }
 
     public void parseType() {
         currTree.addNode("Type", false);
-
+        if (tokens.get(currTokenInArray).getValue().equals("int")) {
+            match("int");
+        } else if (tokens.get(currTokenInArray).getValue().equals("string")) {
+            match("string");
+        } else if (tokens.get(currTokenInArray).getValue().equals("boolean")) {
+            match("boolean");
+        } else {
+            // Error Handling
+        }
+        currTree.executeOrder66();
     }
 
     public void parseChar() {
@@ -212,6 +237,7 @@ public class parser {
     public void parseSpace() {
         currTree.addNode("Space", false);
         match(" ");
+        currTree.executeOrder66();
     }
 
     public void parseDigit() {
