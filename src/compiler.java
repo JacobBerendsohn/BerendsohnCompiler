@@ -7,6 +7,9 @@ public class compiler {
     public static void main(String[] args) {
 
         lexer lex = new lexer();
+        parser parse = new parser();
+        parseTree pTree = new parseTree();
+        token initToken = new token();
 
         // Enthusiastic Intro
         System.out.println("I cannot wait to have a fully functional compiler I made myself!");
