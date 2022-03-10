@@ -156,20 +156,35 @@ public class lexer {
 
                 programCount++;
                 if (errorCount == 0) {
+                    createInfo("Lex Complete with " + warningCount + " warning(s)\n");
+
+                    // I plan on moving all calls to Parse and Sem analysis to main class
 
                     ////////
                     // Begin Parse HERE
                     ////////
 
-                    System.out.println("Beginning Parse");
+                    System.out.println("Beginning Parse for tokens:");
+                    for (token t : tokens) {
+                        System.out.println(t.getValue());
+                    }
+                    System.out.println("");
                     parseTree p = parse.startParse(tokens);
+                    System.out.println(p.toString());
+
+                    // Clearing tree so next string is not muttled
+                    p.clearTree();
 
                     ////////
                     // End Parse HERE
                     ////////
 
+                    ////////
+                    // Start Semantic Analysis
+                    ////////
+
                     tokens.clear();
-                    createInfo("Lex Complete with " + warningCount + " warning(s)\n");
+
                     if (inputLines.get(currLine + 1) != null) {
                         createInfo("Lexing program " + programCount + "...");
                     }
@@ -280,11 +295,11 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
-                                .equalsIgnoreCase("boolean")) {
+                        .equalsIgnoreCase("boolean")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3)
                             + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
-                                    .equals("boolean")) {
+                            .equals("boolean")) {
                         return createToken("TYPE_BOOLEAN", "boolean",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 6);
                     } else {
@@ -301,10 +316,10 @@ public class lexer {
             if (curPos + 3 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3))
-                                .equalsIgnoreCase("true")) {
+                        .equalsIgnoreCase("true")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3))
-                                    .equals("true")) {
+                            .equals("true")) {
                         return createToken("BOOLEAN_VALUE", "true",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 3);
                     } else {

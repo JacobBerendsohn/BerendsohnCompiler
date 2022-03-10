@@ -10,6 +10,7 @@ public class compiler {
         parser parse = new parser();
         parseTree pTree = new parseTree();
         token initToken = new token();
+        node initNode = new node();
 
         // Enthusiastic Intro
         System.out.println("I cannot wait to have a fully functional compiler I made myself!");

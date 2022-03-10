@@ -11,6 +11,10 @@ public class node {
         this.name = name;
     }
 
+    public node() {
+
+    }
+
     // Function for adding children to a node
     public void addChild(node child) {
         this.children.add(child);
@@ -34,6 +38,16 @@ public class node {
 
     public void addLeafToken(token leafT) {
         this.leafToken = leafT;
+    }
+
+    public String listChildren() {
+        String children = "Children:\n";
+
+        for (node n : this.children) {
+            children += (n.getName() + "\n");
+        }
+
+        return children;
     }
 
     // Check for root nodes
