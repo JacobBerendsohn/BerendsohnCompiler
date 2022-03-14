@@ -164,13 +164,16 @@ public class lexer {
                     // Begin Parse HERE
                     ////////
 
-                    System.out.println("Beginning Parse for tokens:");
-                    for (token t : tokens) {
-                        System.out.println(t.getValue());
-                    }
-                    System.out.println("");
+                    parse.createInfo("Parsing Program " + Integer.toString(programCount - 1) + "...");
                     parseTree p = parse.startParse(tokens);
-                    System.out.println(p.toString());
+                    System.out.println("");
+                    if (!p.isError) {
+                        System.out.println(p.toString());
+                        parse.createInfo("Parse Completed for Program " + Integer.toString(programCount - 1) + "\n");
+                    } else {
+                        System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
+                                + " stopped in parse\n");
+                    }
 
                     // Clearing tree so next string is not muttled
                     p.clearTree();

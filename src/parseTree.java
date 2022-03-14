@@ -3,14 +3,16 @@ public class parseTree {
     node rootNode = null;
     node currentNode = null;
     String treeString = "";
+    boolean isError = false;
 
     public void clearTree() {
         rootNode = null;
         currentNode = null;
         treeString = "";
+        isError = false;
     }
 
-    public void addNode(String label, String kind) {
+    public void addNode(String label, Boolean isLeaf) {
         // Creating the node to be added to the tree and naming it
         node curParseNode = new node(label);
 
@@ -28,7 +30,7 @@ public class parseTree {
         }
 
         // Check to see if the node is a leaf node if not, set this node to currNode
-        if (kind.equals("branch")) {
+        if (!isLeaf) {
             this.currentNode = curParseNode;
         }
 

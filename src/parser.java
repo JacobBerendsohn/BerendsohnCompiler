@@ -5,40 +5,44 @@ public class parser {
     parseTree currTree = new parseTree();
     ArrayList<token> tokens = new ArrayList<token>();
     int currTokenInArray = 0;
+    boolean debug = true;
 
     int prCt = 0;
 
     public parseTree startParse(ArrayList<token> tokenList) {
-        this.tokens = tokenList;
+        tokens = tokenList;
         parseProgram();
-        tokens.clear();
+        tokens = new ArrayList<token>();
+        currTokenInArray = 0;
         return currTree;
     }
 
     public void match(String expected) {
         if (expected.equals(tokens.get(currTokenInArray).getValue())) {
-            currTree.addNode(expected, "leaf");
+            currTree.addNode(expected, true);
             currTokenInArray++;
         } else {
-            // Error handling
-            System.out.println("Error in match");
+            createError(expected, tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
     }
 
     public void matchRegEx(String regEx) {
         if (tokens.get(currTokenInArray).getValue().matches(regEx)) {
-            currTree.addNode(tokens.get(currTokenInArray).getValue(), "leaf");
+            currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
             currTokenInArray++;
         } else {
-            // Add error handling
-            System.out.println("Error in matchRegEx");
+            createError(regEx, tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
 
         }
     }
 
     public void parseProgram() {
-
-        currTree.addNode("Program", "branch");
+        if (debug) {
+            createDebug("parseProgram()");
+        }
+        currTree.addNode("Program", false);
         prCt++;
         parseBlock();
         match("$");
@@ -46,7 +50,10 @@ public class parser {
     }
 
     public void parseBlock() {
-        currTree.addNode("Block", "branch");
+        if (debug) {
+            createDebug("parseBlock()");
+        }
+        currTree.addNode("Block", false);
         match("{");
         parseStatementList();
         match("}");
@@ -54,28 +61,39 @@ public class parser {
     }
 
     public void parseStatementList() {
-        currTree.addNode("StatementList", "branch");
-        // Checking if there is a statement and if not, make it an empty string
-        if (tokens.get(currTokenInArray).getValue().equals("print")
-                || (tokens.get(currTokenInArray).getType().equals("ID")
-                        && tokens.get(currTokenInArray + 1).getType().equals("ASSIGN"))
-                || (tokens.get(currTokenInArray + 1).getType().equals("ID")
-                        && (tokens.get(currTokenInArray).getValue().equals("int")
-                                || tokens.get(currTokenInArray).getValue().equals("string")
-                                || tokens.get(currTokenInArray).getValue().equals("boolean")))
-                || tokens.get(currTokenInArray).getValue().equals("while")
-                || tokens.get(currTokenInArray).getValue().equals("if")
-                || tokens.get(currTokenInArray).getValue().equals("{")) {
-            parseStatement();
-            parseStatementList();
-        } else {
-            // Empty String handling
+        try {
+            if (debug) {
+                createDebug("parseStatementList()");
+            }
+            currTree.addNode("StatementList", false);
+            // Checking if there is a statement and if not, make it an empty string
+            if (tokens.get(currTokenInArray).getValue().equals("print")
+                    || (tokens.get(currTokenInArray).getType().equals("ID")
+                            && tokens.get(currTokenInArray + 1).getType().equals("ASSIGN"))
+                    || (tokens.get(currTokenInArray + 1).getType().equals("ID")
+                            && (tokens.get(currTokenInArray).getValue().equals("int")
+                                    || tokens.get(currTokenInArray).getValue().equals("string")
+                                    || tokens.get(currTokenInArray).getValue().equals("boolean")))
+                    || tokens.get(currTokenInArray).getValue().equals("while")
+                    || tokens.get(currTokenInArray).getValue().equals("if")
+                    || tokens.get(currTokenInArray).getValue().equals("{")) {
+                parseStatement();
+                parseStatementList();
+            } else {
+                // Empty String handling
+            }
+            currTree.executeOrder66();
+        } catch (Exception e) {
+
         }
-        currTree.executeOrder66();
+
     }
 
     public void parseStatement() {
-        currTree.addNode("Statement", "branch");
+        if (debug) {
+            createDebug("parseStatement()");
+        }
+        currTree.addNode("Statement", false);
         if (tokens.get(currTokenInArray).getValue().equals("print")) {
             parsePrintStatement();
         } else if (tokens.get(currTokenInArray).getType().equals("ID")
@@ -93,13 +111,17 @@ public class parser {
         } else if (tokens.get(currTokenInArray).getValue().equals("{")) {
             parseBlock();
         } else {
-            // Error Handling
+            createError("[STATEMENT]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parsePrintStatement() {
-        currTree.addNode("PrintStatement", "branch");
+        if (debug) {
+            createDebug("parsePrintStatement()");
+        }
+        currTree.addNode("PrintStatement", false);
         match("print");
         match("(");
         parseExpr();
@@ -108,22 +130,32 @@ public class parser {
     }
 
     public void parseAssignmentStatement() {
-        currTree.addNode("AssignmentStatement", "branch");
+        if (debug) {
+            createDebug("parseAssignmentStatement()");
+        }
+        currTree.addNode("AssignmentStatement", false);
         parseID();
         match("=");
         parseExpr();
         currTree.executeOrder66();
     }
 
+    // Separate the VarDecl for assignment statements in a statement list
     public void parseVarDecl() {
-        currTree.addNode("VarDecl", "branch");
+        if (debug) {
+            createDebug("parseVarDecl()");
+        }
+        currTree.addNode("VarDecl", false);
         parseType();
         parseID();
         currTree.executeOrder66();
     }
 
     public void parseWhileStatement() {
-        currTree.addNode("WhileStatement", "branch");
+        if (debug) {
+            createDebug("parseWhileStatement()");
+        }
+        currTree.addNode("WhileStatement", false);
         match("while");
         parseBooleanExpr();
         parseBlock();
@@ -131,7 +163,10 @@ public class parser {
     }
 
     public void parseIfStatement() {
-        currTree.addNode("IfStatement", "branch");
+        if (debug) {
+            createDebug("parseIfStatement()");
+        }
+        currTree.addNode("IfStatement", false);
         match("if");
         parseBooleanExpr();
         parseBlock();
@@ -139,9 +174,12 @@ public class parser {
     }
 
     public void parseExpr() {
-        currTree.addNode("Expr", "branch");
+        if (debug) {
+            createDebug("parseExpr()");
+        }
+        currTree.addNode("Expr", false);
         if (tokens.get(currTokenInArray).getType().equals("DIGIT")) {
-            parsePrintStatement();
+            parseIntExpr();
             // Checking for a quote
         } else if (tokens.get(currTokenInArray).getValue().split("")[0].equals("\"")) {
             parseStringExpr();
@@ -150,13 +188,17 @@ public class parser {
         } else if (tokens.get(currTokenInArray).getType().equals("ID")) {
             parseID();
         } else {
-            // Error Handling
+            createError("[EXPR]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseIntExpr() {
-        currTree.addNode("IntExpr", "branch");
+        if (debug) {
+            createDebug("parseIntExpr()");
+        }
+        currTree.addNode("IntExpr", false);
         if (tokens.get(currTokenInArray).getType().equals("DIGIT")
                 && tokens.get(currTokenInArray).getValue().equals("+")) {
             parseDigit();
@@ -164,23 +206,34 @@ public class parser {
             parseExpr();
         } else if (tokens.get(currTokenInArray).getType().equals("DIGIT")) {
             parseDigit();
+        } else {
+            createError("[EXPR_INT]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseStringExpr() {
-        currTree.addNode("StringExpr", "branch");
+        if (debug) {
+            createDebug("parseStringExpr()");
+        }
+        currTree.addNode("StringExpr", false);
         if (tokens.get(currTokenInArray).getValue().equals("\"")) {
             match("\"");
             parseCharList();
             match("\"");
         } else {
-            // Error Handling
+            createError("[EXPR_STRING]", tokens.get(currTokenInArray).getType(),
+                    tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
     }
 
     public void parseBooleanExpr() {
-        currTree.addNode("BooleanExpr", "branch");
+        if (debug) {
+            createDebug("parseBooleanExpr()");
+        }
+        currTree.addNode("BooleanExpr", false);
         if (tokens.get(currTokenInArray).getValue().equals("(")) {
             match("(");
             parseExpr();
@@ -191,25 +244,36 @@ public class parser {
                 || tokens.get(currTokenInArray).getValue().equals("false")) {
             parseBoolVal();
         } else {
-            // Error Handling
+            createError("[EXPR_BOOLEAN]", tokens.get(currTokenInArray).getType(),
+                    tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseID() {
-        currTree.addNode("ID", "branch");
+        if (debug) {
+            createDebug("parseID()");
+        }
+        currTree.addNode("ID", false);
         parseChar();
         currTree.executeOrder66();
     }
 
     public void parseCharList() {
-        currTree.addNode("CharList", "branch");
+        if (debug) {
+            createDebug("parseCharList()");
+        }
+        currTree.addNode("CharList", false);
         matchRegEx("[a-z ]+");
         currTree.executeOrder66();
     }
 
     public void parseType() {
-        currTree.addNode("Type", "branch");
+        if (debug) {
+            createDebug("parseType()");
+        }
+        currTree.addNode("Type", false);
         if (tokens.get(currTokenInArray).getValue().equals("int")) {
             match("int");
         } else if (tokens.get(currTokenInArray).getValue().equals("string")) {
@@ -217,66 +281,106 @@ public class parser {
         } else if (tokens.get(currTokenInArray).getValue().equals("boolean")) {
             match("boolean");
         } else {
-            // Error Handling
+            createError("[TYPE]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseChar() {
-        currTree.addNode("Char", "branch");
+        if (debug) {
+            createDebug("parseChar()");
+        }
+        currTree.addNode("Char", false);
         // Using regEx instead of a bunch of ifs to see if token is in alphabet
         if (tokens.get(currTokenInArray).getValue().matches("[a-z]+")) {
             matchRegEx("[a-z]+");
         } else {
-            // Error Handling
+            createError("[ [a-z]+ ]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseSpace() {
-        currTree.addNode("Space", "branch");
+        if (debug) {
+            createDebug("parseSpace()");
+        }
+        currTree.addNode("Space", false);
         match(" ");
         currTree.executeOrder66();
     }
 
     public void parseDigit() {
-        currTree.addNode("Digit", "branch");
+        if (debug) {
+            createDebug("parseDigit()");
+        }
+        currTree.addNode("Digit", false);
         // Using regEx instead of a bunch of ifs to see if token is a digit
         if (tokens.get(currTokenInArray).getValue().matches("[0-9]+")) {
             matchRegEx("[0-9]+");
         } else {
-            // Error Handling
+            createError("[ [0-9]+ ]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseBoolOp() {
-        currTree.addNode("BoolOp", "branch");
+        if (debug) {
+            createDebug("parseBoolOp()");
+        }
+        currTree.addNode("BoolOp", false);
         if (tokens.get(currTokenInArray).getValue().equals("==")) {
             match("==");
         } else if (tokens.get(currTokenInArray).getValue().equals("!=")) {
             match("!=");
         } else {
-            // Error handling
+            createError("[BOOL_OP]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseBoolVal() {
-        currTree.addNode("BoolVal", "branch");
+        if (debug) {
+            createDebug("parseBoolVal()");
+        }
+        currTree.addNode("BoolVal", false);
         if (tokens.get(currTokenInArray).getValue().equals("true")) {
             match("true");
         } else if (tokens.get(currTokenInArray).getValue().equals("false")) {
             match("false");
         } else {
-            // Error handling
+            createError("[BOOL_VAL]", tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
+                    tokens.get(currTokenInArray).getLine());
         }
         currTree.executeOrder66();
     }
 
     public void parseIntOp() {
-        currTree.addNode("IntOp", "branch");
+        if (debug) {
+            createDebug("parseIntOp()");
+        }
+        currTree.addNode("IntOp", false);
         match("+");
         currTree.executeOrder66();
+    }
+
+    // Creates an error to display and stop parse
+    public void createError(String expected, String read, String value, String line) {
+        currTree.isError = true;
+        System.out.println(
+                "ERROR Parse - Expected: " + expected + " Read: " + read + " with value " + value + " on line: "
+                        + line);
+    }
+
+    // Creates a debug message
+    public void createDebug(String message) {
+        System.out.println("DEBUG Parse - " + message);
+    }
+
+    public void createInfo(String message) {
+        System.out.println("INFO Parse - " + message);
     }
 }
