@@ -183,7 +183,7 @@ public class parser {
             // Checking for a quote
         } else if (tokens.get(currTokenInArray).getValue().split("")[0].equals("\"")) {
             parseStringExpr();
-        } else if (tokens.get(currTokenInArray).getValue().equals("(")) {
+        } else if (tokens.get(currTokenInArray).getType().equals("BOOLEAN_VALUE")) {
             parseBooleanExpr();
         } else if (tokens.get(currTokenInArray).getType().equals("ID")) {
             parseID();
@@ -200,7 +200,7 @@ public class parser {
         }
         currTree.addNode("IntExpr", false);
         if (tokens.get(currTokenInArray).getType().equals("DIGIT")
-                && tokens.get(currTokenInArray).getValue().equals("+")) {
+                && tokens.get(currTokenInArray + 1).getValue().equals("+")) {
             parseDigit();
             parseIntOp();
             parseExpr();
