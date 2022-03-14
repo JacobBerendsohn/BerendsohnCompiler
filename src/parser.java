@@ -265,7 +265,12 @@ public class parser {
             createDebug("parseCharList()");
         }
         currTree.addNode("CharList", false);
-        matchRegEx("[a-z ]+");
+        if (!tokens.get(currTokenInArray).getValue().equals("")) {
+            matchRegEx("[a-z ]+");
+        } else {
+            match("");
+        }
+
         currTree.executeOrder66();
     }
 
