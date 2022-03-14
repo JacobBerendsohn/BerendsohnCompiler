@@ -1,1 +1,4 @@
-{a = 1 + 2 + 3 + 4   +    5}$
+{
+    boolean d
+    d = ("string" != "string")
+}$

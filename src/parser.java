@@ -183,7 +183,8 @@ public class parser {
             // Checking for a quote
         } else if (tokens.get(currTokenInArray).getValue().split("")[0].equals("\"")) {
             parseStringExpr();
-        } else if (tokens.get(currTokenInArray).getType().equals("BOOLEAN_VALUE")) {
+        } else if (tokens.get(currTokenInArray).getType().equals("BOOLEAN_VALUE")
+                || tokens.get(currTokenInArray).getValue().equals("(")) {
             parseBooleanExpr();
         } else if (tokens.get(currTokenInArray).getType().equals("ID")) {
             parseID();

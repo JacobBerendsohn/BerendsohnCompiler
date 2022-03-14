@@ -113,6 +113,9 @@ public class lexer {
                 // Symbol Check
                 if (checkSymbol(preTokenList, curPosInLineArray, line) != null) {
                     token syT = checkSymbol(preTokenList, curPosInLineArray, line);
+                    for (int i = curPosInLineArray; i <= syT.getNewPos(); i++) {
+                        preTokenList.set(i, null);
+                    }
                     tokens.add(syT);
 
                 } else
@@ -375,32 +378,32 @@ public class lexer {
             // Checking for open Brackets
             if (currLine.get(curPos).equals("{")) {
                 return createToken("L_BRACE", "{",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for closed Brackets
             if (currLine.get(curPos).equals("}")) {
                 return createToken("R_BRACE", "}",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for open Parenthesis
             if (currLine.get(curPos).equals("(")) {
                 return createToken("L_PAREN", "(",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for closed Parenthesis
             if (currLine.get(curPos).equals(")")) {
                 return createToken("R_PAREN", ")",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for addition
             if (currLine.get(curPos).equals("+")) {
                 return createToken("ADDITION", "+",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for assign
             if (currLine.get(curPos).equals("=") && !currLine.get(curPos + 1).equals("=")) {
                 return createToken("ASSIGN", "=",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // == Check
             if (curPos + 1 < currLine.size()) {
