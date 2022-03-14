@@ -19,7 +19,7 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    public ArrayList<token> lex(File inputFile) {
+    public ArrayList<token> lex(File inputFile, parser parse) {
 
         BufferedReader reader;
 
@@ -69,13 +69,17 @@ public class lexer {
 
                 // Quote Check
                 if (checkQuote(preTokenList, curPosInLineArray, line) != null) {
-                    token qT = checkQuote(preTokenList, curPosInLineArray, line);
-                    curPosInLineArray = qT.getNewPos();
-                    if (!qT.getType().equals("ERROR")) {
-                        tokens.add(qT);
+                    ArrayList<token> qT = checkQuote(preTokenList, curPosInLineArray, line);
+
+                    curPosInLineArray = qT.get(qT.size() - 1).getNewPos();
+
+                    if (!qT.get(0).getType().equals("ERROR")) {
+                        for (token t : qT) {
+                            tokens.add(t);
+                        }
                     } else {
-                        createError(qT.getLine(),
-                                "Illegal characters in quote: " + qT.getValue());
+                        createError(qT.get(0).getLine(),
+                                "Illegal characters in quote: " + qT.get(0).getValue());
                     }
                 } else
 
@@ -109,6 +113,9 @@ public class lexer {
                 // Symbol Check
                 if (checkSymbol(preTokenList, curPosInLineArray, line) != null) {
                     token syT = checkSymbol(preTokenList, curPosInLineArray, line);
+                    for (int i = curPosInLineArray; i <= syT.getNewPos(); i++) {
+                        preTokenList.set(i, null);
+                    }
                     tokens.add(syT);
 
                 } else
@@ -122,7 +129,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse(line, inputLines);
+                    runParse(line, inputLines, parse);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -141,7 +148,7 @@ public class lexer {
     }
 
     // Ends lex for each individual program and sends it through parsing
-    public void runParse(int currLine, HashMap<Integer, String> inputLines) {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -152,12 +159,38 @@ public class lexer {
 
                 programCount++;
                 if (errorCount == 0) {
+                    createInfo("Lex Complete with " + warningCount + " warning(s)\n");
+
+                    // I plan on moving all calls to Parse and Sem analysis to main class
 
                     ////////
                     // Begin Parse HERE
                     ////////
+
+                    parse.createInfo("Parsing Program " + Integer.toString(programCount - 1) + "...");
+                    parseTree p = parse.startParse(tokens);
+                    System.out.println("");
+                    if (!p.isError) {
+                        System.out.println(p.toString());
+                        parse.createInfo("Parse Completed for Program " + Integer.toString(programCount - 1) + "\n");
+                    } else {
+                        System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
+                                + " stopped in parse\n");
+                    }
+
+                    // Clearing tree so next string is not muttled
+                    p.clearTree();
+
+                    ////////
+                    // End Parse HERE
+                    ////////
+
+                    ////////
+                    // Start Semantic Analysis
+                    ////////
+
                     tokens.clear();
-                    createInfo("Lex Complete with " + warningCount + " warning(s)\n");
+
                     if (inputLines.get(currLine + 1) != null) {
                         createInfo("Lexing program " + programCount + "...");
                     }
@@ -268,11 +301,11 @@ public class lexer {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3)
                         + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
-                                .equalsIgnoreCase("boolean")) {
+                        .equalsIgnoreCase("boolean")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3)
                             + currLine.get(curPos + 4) + currLine.get(curPos + 5) + currLine.get(curPos + 6))
-                                    .equals("boolean")) {
+                            .equals("boolean")) {
                         return createToken("TYPE_BOOLEAN", "boolean",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 6);
                     } else {
@@ -289,10 +322,10 @@ public class lexer {
             if (curPos + 3 < currLine.size()) {
                 if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                         + currLine.get(curPos + 3))
-                                .equalsIgnoreCase("true")) {
+                        .equalsIgnoreCase("true")) {
                     if ((currLine.get(curPos) + currLine.get(curPos + 1) + currLine.get(curPos + 2)
                             + currLine.get(curPos + 3))
-                                    .equals("true")) {
+                            .equals("true")) {
                         return createToken("BOOLEAN_VALUE", "true",
                                 Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 3);
                     } else {
@@ -345,32 +378,32 @@ public class lexer {
             // Checking for open Brackets
             if (currLine.get(curPos).equals("{")) {
                 return createToken("L_BRACE", "{",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for closed Brackets
             if (currLine.get(curPos).equals("}")) {
                 return createToken("R_BRACE", "}",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for open Parenthesis
             if (currLine.get(curPos).equals("(")) {
                 return createToken("L_PAREN", "(",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for closed Parenthesis
             if (currLine.get(curPos).equals(")")) {
                 return createToken("R_PAREN", ")",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for addition
             if (currLine.get(curPos).equals("+")) {
                 return createToken("ADDITION", "+",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // Checking for assign
             if (currLine.get(curPos).equals("=") && !currLine.get(curPos + 1).equals("=")) {
                 return createToken("ASSIGN", "=",
-                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos + 1);
+                        Integer.toString(currLineInt) + ":" + Integer.toString(curPos), curPos);
             }
             // == Check
             if (curPos + 1 < currLine.size()) {
@@ -423,7 +456,7 @@ public class lexer {
     }
 
     // Sends back the end position of a quotation in the array
-    public token checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
+    public ArrayList<token> checkQuote(ArrayList<String> currLine, int curPos, int currLineInt) {
         ArrayList<String> quote = new ArrayList<String>();
         if (currLine.get(curPos) != null) {
             // Checking space for comments
@@ -451,16 +484,33 @@ public class lexer {
                                 || quote.contains("6") || quote.contains("7") || quote.contains("8")
                                 || quote.contains("9") || quote.contains("0")) {
                             // Creating error token if a quote contains illegal characters
-                            return createToken("ERROR", String.join("", quote),
+                            ArrayList<token> sendBack = new ArrayList<token>();
+
+                            sendBack.add(createToken("ERROR", String.join("", quote),
                                     Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
                                             + Integer.toString(i),
-                                    i);
+                                    i));
+
+                            return sendBack;
                         } else {
+                            ArrayList<token> sendBack = new ArrayList<token>();
+
+                            // Separating the quotes from the actual quote itself for parse and sending back
+                            // all 3 tokens
+                            sendBack.add(createToken("QUOTE", "\"",
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos), i));
+
+                            sendBack.add(createToken("STRING_EXPR",
+                                    String.join("", quote).substring(1, String.join("", quote).length() - 1),
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos + 1) + "-"
+                                            + Integer.toString(i - 1),
+                                    i));
+
+                            sendBack.add(createToken("QUOTE", "\"",
+                                    Integer.toString(currLineInt) + ":" + Integer.toString(i), i));
+
                             // Sending back the real token if it contains no illegal characters
-                            return createToken("STRING_EXPR", String.join("", quote),
-                                    Integer.toString(currLineInt) + ":" + Integer.toString(curPos) + "-"
-                                            + Integer.toString(i),
-                                    i);
+                            return sendBack;
                         }
 
                     }

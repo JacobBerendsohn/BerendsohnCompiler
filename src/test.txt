@@ -1,34 +1,25 @@
+{print("")}$
+{print(a)}$
+{print(2)}$
+{print("a")}$
+{print(false)}$
+{print("inta")}$
+{a=1}$
+{a = 1}$
+{a = 1 + 2 + 3 + 4   +    5}$
 {
-    "double
-    quote"
+    int a
+    a = a
+    string b
+    a = b
+}$
+{int a a=a string b a=b}$
+{{{{{{a=1+2+3+4+5{print(4+a)}}}}}}}$
+{
+    /* what about comments */
+    a="string"
 }$
 {
-    /* unterminated
-    quote*/
-}$
-{
-    "real quote"
-}$
-{
-    /* real comment */print a
-    int a = 1
-}$
-{{{{{}}}}}$
-{{{{{}}}}$
-{
-    i = if
-    fint a
-    print 1 = 9
-}$
-{
-    print("hello")
-    1 == 3
-    1 != 1
-}$
-{
-    {({})()}false
-}$
-{
-    "CAPS in quotes"
-    "numbers in qu0t3s"
+    boolean d
+    d = ("string" != "string")
 }$
