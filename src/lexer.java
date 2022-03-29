@@ -19,8 +19,6 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    // Dylan is a fine gentleman
-
     public ArrayList<token> lex(File inputFile, parser parse) {
 
         BufferedReader reader;
