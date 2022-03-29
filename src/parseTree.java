@@ -1,4 +1,5 @@
 // This class was adapted from the psuedocode on page 154 of the parse PDF
+// as well as treeDemo.js from labouseur.com
 public class parseTree {
     node rootNode = null;
     node currentNode = null;

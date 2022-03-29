@@ -19,6 +19,8 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
+    // Dylan is a fine gentleman
+
     public ArrayList<token> lex(File inputFile, parser parse) {
 
         BufferedReader reader;
@@ -169,10 +171,11 @@ public class lexer {
 
                     parse.createInfo("Parsing Program " + Integer.toString(programCount - 1) + "...");
                     parseTree p = parse.startParse(tokens);
-                    System.out.println("");
                     if (!p.isError) {
-                        System.out.println(p.toString());
                         parse.createInfo("Parse Completed for Program " + Integer.toString(programCount - 1) + "\n");
+                        parse.createInfo("CST for program " + Integer.toString(programCount - 1));
+                        System.out.println(p.toString());
+
                     } else {
                         System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
                                 + " stopped in parse\n");
