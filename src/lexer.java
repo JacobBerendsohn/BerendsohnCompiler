@@ -2,6 +2,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import objects.parseTree;
 import objects.token;
 
 import java.io.BufferedReader;
@@ -172,7 +173,7 @@ public class lexer {
 
                     parse.createInfo("Parsing Program " + Integer.toString(programCount - 1) + "...");
                     parseTree p = parse.startParse(tokens);
-                    if (!p.isError) {
+                    if (!p.isError()) {
                         parse.createInfo("Parse Completed for Program " + Integer.toString(programCount - 1) + "\n");
                         parse.createInfo("CST for program " + Integer.toString(programCount - 1));
                         System.out.println(p.toString());

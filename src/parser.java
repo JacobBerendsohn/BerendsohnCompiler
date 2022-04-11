@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import objects.parseTree;
 import objects.token;
 
 public class parser {
@@ -377,7 +378,7 @@ public class parser {
 
     // Creates an error to display and stop parse
     public void createError(String expected, String read, String value, String line) {
-        currTree.isError = true;
+        currTree.setError(true);
         System.out.println(
                 "ERROR Parse - Expected: " + expected + " Read: " + read + " with value " + value + " on line: "
                         + line);

@@ -1,6 +1,7 @@
 import java.io.File;
 
 import objects.node;
+import objects.parseTree;
 import objects.token;
 
 public class compiler {
