@@ -1,5 +1,8 @@
 import java.io.File;
 
+import objects.node;
+import objects.token;
+
 public class compiler {
 
     public static File languageInput;

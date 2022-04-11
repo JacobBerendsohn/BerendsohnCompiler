@@ -1,3 +1,5 @@
+import objects.node;
+
 // This class was adapted from the psuedocode on page 154 of the parse PDF
 // as well as treeDemo.js from labouseur.com
 public class parseTree {
@@ -68,15 +70,15 @@ public class parseTree {
         }
 
         // Checking for leaf nodes
-        if (curNode.children.isEmpty()) {
+        if (curNode.getChildren().isEmpty()) {
             treeString += "[" + curNode.getName() + "]\n";
         } else {
             // Children present so show interior branches
             treeString += "<" + curNode.getName() + ">\n";
 
             // Recursion loop [FUN] :)
-            for (int i = 0; i < curNode.children.size(); i++) {
-                expand(curNode.children.get(i), depth + 1);
+            for (int i = 0; i < curNode.getChildren().size(); i++) {
+                expand(curNode.getChildren().get(i), depth + 1);
             }
         }
     }

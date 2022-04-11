@@ -1,3 +1,5 @@
+package objects;
+
 import java.util.ArrayList;
 
 public class node {
@@ -18,6 +20,10 @@ public class node {
     // Function for adding children to a node
     public void addChild(node child) {
         this.children.add(child);
+    }
+
+    public ArrayList<node> getChildren() {
+        return this.children;
     }
 
     public void setParent(node parent) {
