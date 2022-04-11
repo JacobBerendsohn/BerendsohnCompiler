@@ -23,7 +23,7 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    public ArrayList<token> lex(File inputFile, parser parse) {
+    public ArrayList<token> lex(File inputFile, parser parse, semantic semantic) {
 
         BufferedReader reader;
 
@@ -133,7 +133,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse(line, inputLines, parse);
+                    runParse(line, inputLines, parse, semantic);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -152,7 +152,7 @@ public class lexer {
     }
 
     // Ends lex for each individual program and sends it through parsing
-    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse) {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse, semantic semantic) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -192,6 +192,25 @@ public class lexer {
 
                     ////////
                     // Start Semantic Analysis
+                    ////////
+
+                    parse.createInfo(
+                            "Semantic Analysis (Second Parse) starting for Program "
+                                    + Integer.toString(programCount - 1) + "...");
+                    parseTree AST = semantic.startSemantic(tokens);
+                    if (!p.isError()) {
+                        semantic.createInfo(
+                                "Semantic Analysis Completed for Program " + Integer.toString(programCount - 1) + "\n");
+                        parse.createInfo("AST for program " + Integer.toString(programCount - 1));
+                        System.out.println(AST.toString());
+
+                    } else {
+                        System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
+                                + " stopped in parse\n");
+                    }
+
+                    ////////
+                    // End Semantic Analysis
                     ////////
 
                     tokens.clear();
