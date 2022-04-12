@@ -8,6 +8,10 @@ public class parseTree {
     String treeString = "";
     boolean error = false;
 
+    public node getCurrentNode() {
+        return this.currentNode;
+    }
+
     public void clearTree() {
         rootNode = null;
         currentNode = null;

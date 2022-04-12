@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import objects.parseTree;
+import objects.scope;
 import objects.token;
 import objects.node;
 
@@ -364,11 +365,17 @@ public class semantic {
     public parseTree scopeCheck(node curNode, int depth) {
         parseTree scopeTree = new parseTree();
         String checkParent = "";
+        String typeHolder = "";
+
+        // Checking if we need a new scope because of a block
+        if (curNode.getName().equals("Block")) {
+            scopeTree.addNode("Scope 0", false);
+        }
 
         // Checking if the current node is a leaf and shares a parent with the last node
         // traversed
         // Checking for leaf nodes
-        if (curNode.getChildren().isEmpty()) {
+        if (curNode.getChildren().get(0).getChildren().isEmpty()) {
             if (curNode.getParent().getName().equals(checkParent)) {
 
             } else {
