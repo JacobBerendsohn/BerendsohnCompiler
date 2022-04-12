@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import objects.parseTree;
 import objects.token;
+import objects.node;
 
 public class semantic {
     // Main parse function for the AST parseTree
@@ -229,6 +230,7 @@ public class semantic {
         if (debug) {
             createDebug("semanticBooleanExpr()");
         }
+        currTree.addNode("BooleanExpr", false);
         if (tokens.get(currTokenInArray).getValue().equals("(")) {
             match("(", false);
             semanticExpr();
@@ -298,14 +300,6 @@ public class semantic {
         // currTree.executeOrder66();
     }
 
-    public void semanticSpace() {
-        if (debug) {
-            createDebug("semanticSpace()");
-        }
-        match(" ", false);
-        // currTree.executeOrder66();
-    }
-
     public void semanticDigit() {
         if (debug) {
             createDebug("semanticDigit()");
@@ -364,6 +358,33 @@ public class semantic {
         System.out.println(
                 "ERROR Semantic - Expected: " + expected + " Read: " + read + " with value " + value + " on line: "
                         + line);
+    }
+
+    // Traverses Tree in order
+    public parseTree scopeCheck(node curNode, int depth) {
+        parseTree scopeTree = new parseTree();
+        String checkParent = "";
+
+        // Checking if the current node is a leaf and shares a parent with the last node
+        // traversed
+        // Checking for leaf nodes
+        if (curNode.getChildren().isEmpty()) {
+            if (curNode.getParent().getName().equals(checkParent)) {
+
+            } else {
+                checkParent = curNode.getParent().getName();
+            }
+
+        } else {
+            // Children present so show interior branches
+
+            // Recursion loop [FUN] :)
+            for (int i = 0; i < curNode.getChildren().size(); i++) {
+                scopeCheck(curNode.getChildren().get(i), depth + 1);
+            }
+        }
+
+        return scopeTree;
     }
 
     // Creates a debug message

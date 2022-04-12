@@ -1,6 +1,7 @@
 package objects;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class node {
     String name = "";
@@ -8,6 +9,7 @@ public class node {
     ArrayList<node> children = new ArrayList<>();
     token leafToken = null;
     Boolean isRoot = false;
+    Map<String, scope> scopeInfo;
 
     public node(String name) {
         this.name = name;
