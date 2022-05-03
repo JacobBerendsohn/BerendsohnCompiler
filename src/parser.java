@@ -23,6 +23,7 @@ public class parser {
     public void match(String expected) {
         if (expected.equals(tokens.get(currTokenInArray).getValue())) {
             currTree.addNode(expected, true);
+            currTree.getCurrentNode().addLeafToken(tokens.get(currTokenInArray));
             currTokenInArray++;
         } else {
             createError(expected, tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),

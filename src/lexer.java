@@ -194,7 +194,7 @@ public class lexer {
                     // Start Semantic Analysis
                     ////////
 
-                    parse.createInfo(
+                    semantic.createInfo(
                             "Semantic Analysis (Second Parse) starting for Program "
                                     + Integer.toString(programCount - 1) + "...");
                     parseTree AST = semantic.startSemantic(tokens);

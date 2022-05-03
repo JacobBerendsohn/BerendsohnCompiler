@@ -19,6 +19,10 @@ public class parseTree {
         error = false;
     }
 
+    public node getRootNode() {
+        return this.rootNode;
+    }
+
     public void addNode(String label, Boolean isLeaf) {
         // Creating the node to be added to the tree and naming it
         node curParseNode = new node(label);

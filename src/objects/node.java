@@ -19,6 +19,14 @@ public class node {
 
     }
 
+    public void addScope(String id, scope scope) {
+        this.scopeInfo.put(id, scope);
+    }
+
+    public scope getScope(String id) {
+        return this.scopeInfo.get(id);
+    }
+
     // Function for adding children to a node
     public void addChild(node child) {
         this.children.add(child);
@@ -46,6 +54,10 @@ public class node {
 
     public void addLeafToken(token leafT) {
         this.leafToken = leafT;
+    }
+
+    public token getToken() {
+        return this.leafToken;
     }
 
     public String listChildren() {

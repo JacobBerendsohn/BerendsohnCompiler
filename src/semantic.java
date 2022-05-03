@@ -14,6 +14,8 @@ public class semantic {
     public parseTree startSemantic(ArrayList<token> tokenList) {
         tokens = tokenList;
         semanticProgram();
+        parseTree fullScope = scopeCheck(currTree.getRootNode(), 0);
+        System.out.println(fullScope.toString());
         tokens = new ArrayList<token>();
         currTokenInArray = 0;
         return currTree;
@@ -362,24 +364,100 @@ public class semantic {
     }
 
     // Traverses Tree in order
+    parseTree scopeTree = new parseTree();
+    node currentScope = null;
+    node checkParent = null;
+    String typeHolder = "";
+    String varNameHolder = "";
+    int scopeCounter = 0;
+    int numChild = 0;
+
     public parseTree scopeCheck(node curNode, int depth) {
-        parseTree scopeTree = new parseTree();
-        String checkParent = "";
-        String typeHolder = "";
 
         // Checking if we need a new scope because of a block
-        if (curNode.getName().equals("Block")) {
-            scopeTree.addNode("Scope 0", false);
+        // and adding scope to the scope tree
+        if (curNode.getName().equals("Block") && currentScope == null) {
+            scopeTree.addNode("Scope " + Integer.toString(scopeCounter), false);
+            currentScope = scopeTree.getCurrentNode();
+            scopeCounter++;
+        } else if (curNode.getName().equals("Block") && currentScope != null && !curNode.isRoot()) {
+            scopeTree.executeOrder66();
+            scopeTree.addNode("Scope " + Integer.toString(scopeCounter), false);
+            currentScope = scopeTree.getCurrentNode();
+            scopeCounter++;
+        } else if (curNode.getName().equals("Block") && currentScope != null) {
+            scopeTree.addNode("Scope " + Integer.toString(scopeCounter), false);
+            currentScope = scopeTree.getCurrentNode();
+            scopeCounter++;
+        } else {
+            createError("Scope Error");
         }
 
         // Checking if the current node is a leaf and shares a parent with the last node
         // traversed
         // Checking for leaf nodes
-        if (curNode.getChildren().get(0).getChildren().isEmpty()) {
-            if (curNode.getParent().getName().equals(checkParent)) {
+        if (curNode.getChildren().isEmpty()) {
 
-            } else {
-                checkParent = curNode.getParent().getName();
+            // For variable declaration we add a new scope
+            if (curNode.getParent().getName().equals("VarDecl")) {
+                if (numChild == 0) {
+
+                    typeHolder = curNode.getName();
+                    checkParent = curNode.getParent();
+
+                } else if (numChild == 1) {
+                    if (!scopeTree.getCurrentNode().getScope(curNode.getName()).isInit()) {
+                        scope newScope = new scope(curNode.getName(), typeHolder,
+                                Integer.toString(scopeCounter),
+                                curNode.getToken().getLine(), true, false);
+
+                        scopeTree.getCurrentNode().addScope(curNode.getName(), newScope);
+                        numChild = 0;
+                    } else {
+                        createError("Variable already exists with the name :" + curNode.getName() +
+                                "at line "
+                                + scopeTree.getCurrentNode().getScope(curNode.getName()).getPosition());
+                    }
+
+                }
+                // For assignment statement we just check that the correct type is being used
+                // for the entry already in scope
+            } else if (curNode.getParent().getName().equals("AssignmentStatement")) {
+                if (numChild == 0) {
+                    varNameHolder = curNode.getName();
+                    numChild++;
+                } else {
+                    if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "int") {
+                        String testNum = curNode.getName();
+                        if (Integer.parseInt(testNum) == 0 || Integer.parseInt(testNum) == 1
+                                || Integer.parseInt(testNum) == 2 || Integer.parseInt(testNum) == 3
+                                || Integer.parseInt(testNum) == 4 || Integer.parseInt(testNum) == 5
+                                || Integer.parseInt(testNum) == 6 || Integer.parseInt(testNum) == 7
+                                || Integer.parseInt(testNum) == 8 || Integer.parseInt(testNum) == 9) {
+
+                        } else {
+                            createError("Type mismatch, expected " + varNameHolder + " on line: "
+                                    + curNode.getToken().getLine());
+                        }
+                    } else if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "boolean") {
+
+                    } else if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "string") {
+                        String testString = curNode.getName();
+                        String regEx = "[a-z]";
+                        if (testString.matches(regEx)) {
+
+                        } else {
+                            createError("Type mismatch, expected " + varNameHolder + " on line: "
+                                    + curNode.getToken().getLine());
+                        }
+
+                    } else {
+
+                    }
+                    numChild = 0;
+                }
+
+            } else if (curNode.getParent().getName().equals("PrintStatement")) {
             }
 
         } else {
@@ -401,5 +479,9 @@ public class semantic {
 
     public void createInfo(String message) {
         System.out.println("INFO Semantic - " + message);
+    }
+
+    public void createError(String message) {
+        System.out.println("ERROR Semantic - " + message);
     }
 }
