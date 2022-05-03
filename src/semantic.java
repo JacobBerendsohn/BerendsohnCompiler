@@ -444,43 +444,69 @@ public class semantic {
                                         .equals(scopeTree.getCurrentNode().getScope(varNameHolder).getType())) {
                             numChild = 0;
                         } else {
+                            numChild = 0;
                             createError("Type mismatch error for variable: " + curNode.getName() + " on line: "
                                     + scopeTree.getCurrentNode().getScope(curNode.getName()).getPosition());
                         }
                     } else {
-                        if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "int") {
+                        if (scopeTree.getCurrentNode().getScope(varNameHolder).getType().equals("int")) {
                             String testNum = curNode.getName();
                             if (Integer.parseInt(testNum) == 0 || Integer.parseInt(testNum) == 1
                                     || Integer.parseInt(testNum) == 2 || Integer.parseInt(testNum) == 3
                                     || Integer.parseInt(testNum) == 4 || Integer.parseInt(testNum) == 5
                                     || Integer.parseInt(testNum) == 6 || Integer.parseInt(testNum) == 7
                                     || Integer.parseInt(testNum) == 8 || Integer.parseInt(testNum) == 9) {
-
+                                numChild = 0;
                             } else {
-                                createError("Type mismatch, expected " + varNameHolder + " on line: "
+                                numChild = 0;
+                                createError("Type mismatch, expected int on line: "
                                         + curNode.getToken().getLine());
                             }
                         } else if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "boolean") {
-
+                            if (curNode.getName().equals("true") || curNode.getName().equals("false")) {
+                                numChild = 0;
+                            } else {
+                                numChild = 0;
+                                createError("Type mismatch, expected boolean on line: "
+                                        + curNode.getToken().getLine());
+                            }
                         } else if (scopeTree.getCurrentNode().getScope(varNameHolder).getType() == "string") {
                             String testString = curNode.getName();
                             String regEx = "[a-z]";
                             if (testString.matches(regEx)) {
-
+                                numChild = 0;
                             } else {
-                                createError("Type mismatch, expected " + varNameHolder + " on line: "
+                                numChild = 0;
+                                createError("Type mismatch, expected String on line: "
                                         + curNode.getToken().getLine());
                             }
 
-                        } else {
-
                         }
-                        numChild = 0;
                     }
 
                 }
 
             } else if (curNode.getParent().getName().equals("PrintStatement")) {
+
+            } else if (curNode.getParent().getName().equals("IfStatement")) {
+                if (numChild == 0) {
+                    numChild++;
+                    varNameHolder = curNode.getName();
+                } else {
+                    if (scopeTree.getCurrentNode().getScope(varNameHolder).isUsed()) {
+                        if (scopeTree.getCurrentNode().getScope(varNameHolder).getType()
+                                .equals(curNode.getToken().getType())) {
+                            numChild = 0;
+                        } else {
+                            createError("Type mismatch, expected "
+                                    + scopeTree.getCurrentNode().getScope(varNameHolder).getType() + " on line: "
+                                    + curNode.getToken().getLine());
+                        }
+                    } else {
+                        createError("Variable: " + varNameHolder + "at line: " + curNode.getToken().getLine()
+                                + "is not used but is being called");
+                    }
+                }
             }
 
         } else {
