@@ -61,8 +61,9 @@ public class semantic {
                         || currTree.getCurrentNode().getName().equals("VarDecl")) {
 
                     if (currTree.getCurrentNode().getChildren().get(0).getName().matches(regEx) &&
-                            currTree.getCurrentNode().getChildren().get(0).getName()
-                                    .equals(tokens.get(currTokenInArray).getValue())) {
+                            currTree.getCurrentNode().getChildren().get(0)
+                                    .getName().equals(tokens.get(currTokenInArray).getValue())
+                            && currTree.getCurrentNode().getChildren().get(0).getToken() == null) {
 
                         currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
                                 currTokenInArray));
