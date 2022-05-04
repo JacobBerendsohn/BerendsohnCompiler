@@ -25,9 +25,27 @@ public class semantic {
         if (expected.equals(tokens.get(currTokenInArray).getValue())) {
             if (inAST) {
                 currTree.addNode(expected, true);
+
+                if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
+                        || currTree.getCurrentNode().getName().equals("VarDecl")) {
+                    if (currTree.getCurrentNode().getChildren().get(0).getName().equals(expected)) {
+                        currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                                currTokenInArray));
+                    } else if (currTree.getCurrentNode().getChildren().get(1).getName().equals(expected)) {
+                        currTree.getCurrentNode().getChildren().get(1).addLeafToken(tokens.get(
+                                currTokenInArray));
+                    }
+                } else {
+                    currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                            currTokenInArray));
+                }
+
             }
+
             currTokenInArray++;
+
         } else {
+            System.out.println("match");
             createError(expected, tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
                     tokens.get(currTokenInArray).getLine());
         }
@@ -35,9 +53,58 @@ public class semantic {
 
     public void matchRegEx(String regEx, boolean inAST) {
         if (tokens.get(currTokenInArray).getValue().matches(regEx)) {
-            currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
+
+            if (inAST) {
+                currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
+
+                if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
+                        || currTree.getCurrentNode().getName().equals("VarDecl")) {
+
+                    if (currTree.getCurrentNode().getChildren().get(0).getName().matches(regEx) &&
+                            currTree.getCurrentNode().getChildren().get(0).getName()
+                                    .equals(tokens.get(currTokenInArray).getValue())) {
+
+                        currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                                currTokenInArray));
+
+                    } else if (currTree.getCurrentNode().getChildren().get(1).getName().matches(regEx) &&
+                            currTree.getCurrentNode().getChildren().get(1).getName()
+                                    .equals(tokens.get(currTokenInArray).getValue())) {
+
+                        currTree.getCurrentNode().getChildren().get(1).addLeafToken(tokens.get(
+                                currTokenInArray));
+                    }
+                } else {
+                    currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                            currTokenInArray));
+                }
+
+                /*
+                 * if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
+                 * || currTree.getCurrentNode().getName().equals("VarDecl")) {
+                 * String child1 = currTree.getCurrentNode().getChildren().get(0).getName();
+                 * String child2 = currTree.getCurrentNode().getChildren().get(1).getName();
+                 * if (child1.matches(regEx) &&
+                 * child1.equals(tokens.get(currTokenInArray).getValue())) {
+                 * currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                 * currTokenInArray));
+                 * } else if (child2.matches(regEx) &&
+                 * child2.equals(tokens.get(currTokenInArray).getValue())) {
+                 * currTree.getCurrentNode().getChildren().get(1).addLeafToken(tokens.get(
+                 * currTokenInArray));
+                 * }
+                 * } else {
+                 * currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
+                 * currTokenInArray));
+                 * }
+                 */
+            }
+
+            System.out.println("Adding to currTokenInArray in matchRegEx");
             currTokenInArray++;
+
         } else {
+            System.out.println("matchRegEx");
             createError(regEx, tokens.get(currTokenInArray).getType(), tokens.get(currTokenInArray).getValue(),
                     tokens.get(currTokenInArray).getLine());
 
@@ -390,7 +457,7 @@ public class semantic {
             currentScope = scopeTree.getCurrentNode();
             scopeCounter++;
         } else {
-            createError("Scope Error");
+
         }
 
         // Checking if the current node is a leaf and shares a parent with the last node
@@ -404,10 +471,18 @@ public class semantic {
 
                     typeHolder = curNode.getName();
                     checkParent = curNode.getParent();
+                    numChild++;
 
                 } else if (numChild == 1) {
                     // Checking if the variable already exists
-                    if (!scopeTree.getCurrentNode().getScope(curNode.getName()).isInit()) {
+                    if (scopeTree.getCurrentNode().isScopeEmpty()) {
+                        scope newScope = new scope(curNode.getName(), typeHolder,
+                                Integer.toString(scopeCounter),
+                                curNode.getToken().getLine(), true, false);
+
+                        scopeTree.getCurrentNode().addScope(curNode.getName(), newScope);
+                        numChild = 0;
+                    } else if (!scopeTree.getCurrentNode().getScope(curNode.getName()).isInit()) {
                         scope newScope = new scope(curNode.getName(), typeHolder,
                                 Integer.toString(scopeCounter),
                                 curNode.getToken().getLine(), true, false);

@@ -1,6 +1,7 @@
 package objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class node {
@@ -9,10 +10,14 @@ public class node {
     ArrayList<node> children = new ArrayList<>();
     token leafToken = null;
     Boolean isRoot = false;
-    Map<String, scope> scopeInfo;
+    Map<String, scope> scopeInfo = new HashMap<String, scope>();
 
     public node(String name) {
         this.name = name;
+    }
+
+    public boolean isScopeEmpty() {
+        return scopeInfo.isEmpty();
     }
 
     public node() {
