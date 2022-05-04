@@ -27,7 +27,8 @@ public class semantic {
                 currTree.addNode(expected, true);
 
                 if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
-                        || currTree.getCurrentNode().getName().equals("VarDecl")) {
+                        || currTree.getCurrentNode().getName().equals("VarDecl")
+                        || currTree.getCurrentNode().getName().equals("BooleanExpr")) {
                     if (currTree.getCurrentNode().getChildren().get(0).getName().equals(expected)) {
                         currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
                                 currTokenInArray));
@@ -58,7 +59,8 @@ public class semantic {
                 currTree.addNode(tokens.get(currTokenInArray).getValue(), true);
 
                 if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
-                        || currTree.getCurrentNode().getName().equals("VarDecl")) {
+                        || currTree.getCurrentNode().getName().equals("VarDecl")
+                        || currTree.getCurrentNode().getName().equals("BooleanExpr")) {
 
                     if (currTree.getCurrentNode().getChildren().get(0).getName().matches(regEx) &&
                             currTree.getCurrentNode().getChildren().get(0)
@@ -80,28 +82,8 @@ public class semantic {
                             currTokenInArray));
                 }
 
-                /*
-                 * if (currTree.getCurrentNode().getName().equals("AssignmentStatement")
-                 * || currTree.getCurrentNode().getName().equals("VarDecl")) {
-                 * String child1 = currTree.getCurrentNode().getChildren().get(0).getName();
-                 * String child2 = currTree.getCurrentNode().getChildren().get(1).getName();
-                 * if (child1.matches(regEx) &&
-                 * child1.equals(tokens.get(currTokenInArray).getValue())) {
-                 * currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
-                 * currTokenInArray));
-                 * } else if (child2.matches(regEx) &&
-                 * child2.equals(tokens.get(currTokenInArray).getValue())) {
-                 * currTree.getCurrentNode().getChildren().get(1).addLeafToken(tokens.get(
-                 * currTokenInArray));
-                 * }
-                 * } else {
-                 * currTree.getCurrentNode().getChildren().get(0).addLeafToken(tokens.get(
-                 * currTokenInArray));
-                 * }
-                 */
             }
 
-            System.out.println("Adding to currTokenInArray in matchRegEx");
             currTokenInArray++;
 
         } else {
@@ -483,7 +465,7 @@ public class semantic {
 
                         scopeTree.getCurrentNode().addScope(curNode.getName(), newScope);
                         numChild = 0;
-                    } else if (!scopeTree.getCurrentNode().getScope(curNode.getName()).isInit()) {
+                    } else if (scopeTree.getCurrentNode().getScope(curNode.getName()) == null) {
                         scope newScope = new scope(curNode.getName(), typeHolder,
                                 Integer.toString(scopeCounter),
                                 curNode.getToken().getLine(), true, false);
