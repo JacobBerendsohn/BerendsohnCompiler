@@ -197,8 +197,10 @@ public class lexer {
                     semantic.createInfo(
                             "Semantic Analysis (Second Parse) starting for Program "
                                     + Integer.toString(programCount - 1) + "...");
+
                     parseTree AST = semantic.startSemantic(tokens);
-                    if (!p.isError()) {
+
+                    if (!AST.isError()) {
                         semantic.createInfo(
                                 "Semantic Analysis Completed for Program " + Integer.toString(programCount - 1) + "\n");
                         parse.createInfo("AST for program " + Integer.toString(programCount - 1));
@@ -206,8 +208,9 @@ public class lexer {
 
                     } else {
                         System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
-                                + " stopped in parse\n");
+                                + " stopped in semantic analysis\n");
                     }
+                    AST.clearTree();
 
                     ////////
                     // End Semantic Analysis

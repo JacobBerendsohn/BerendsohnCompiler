@@ -19,6 +19,10 @@ public class parseTree {
         error = false;
     }
 
+    public void setCurrentNode(node n) {
+        this.currentNode = n;
+    }
+
     public node getRootNode() {
         return this.rootNode;
     }

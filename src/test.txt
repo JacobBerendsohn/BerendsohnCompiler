@@ -1,17 +1,3 @@
 {
-int a
-{
-boolean b
-{
-string c
-{
-a = 5
-b = false
-c = "inta"
-}
-print(c)
-}
-print(b)
-}
-print(a)
+    a = 0
 }$
