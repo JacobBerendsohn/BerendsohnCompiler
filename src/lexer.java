@@ -1,6 +1,10 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import objects.parseTree;
+import objects.token;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -19,9 +23,7 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    // Dylan is a fine gentleman
-
-    public ArrayList<token> lex(File inputFile, parser parse) {
+    public ArrayList<token> lex(File inputFile, parser parse, semantic semantic) {
 
         BufferedReader reader;
 
@@ -131,7 +133,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse(line, inputLines, parse);
+                    runParse(line, inputLines, parse, semantic);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -150,7 +152,7 @@ public class lexer {
     }
 
     // Ends lex for each individual program and sends it through parsing
-    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse) {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse, semantic semantic) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -171,7 +173,7 @@ public class lexer {
 
                     parse.createInfo("Parsing Program " + Integer.toString(programCount - 1) + "...");
                     parseTree p = parse.startParse(tokens);
-                    if (!p.isError) {
+                    if (!p.isError()) {
                         parse.createInfo("Parse Completed for Program " + Integer.toString(programCount - 1) + "\n");
                         parse.createInfo("CST for program " + Integer.toString(programCount - 1));
                         System.out.println(p.toString());
@@ -190,6 +192,28 @@ public class lexer {
 
                     ////////
                     // Start Semantic Analysis
+                    ////////
+
+                    semantic.createInfo(
+                            "Semantic Analysis (Second Parse) starting for Program "
+                                    + Integer.toString(programCount - 1) + "...");
+
+                    parseTree AST = semantic.startSemantic(tokens);
+
+                    if (!AST.isError()) {
+                        semantic.createInfo(
+                                "Semantic Analysis Completed for Program " + Integer.toString(programCount - 1) + "\n");
+                        parse.createInfo("AST for program " + Integer.toString(programCount - 1));
+                        System.out.println(AST.toString());
+
+                    } else {
+                        System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
+                                + " stopped in semantic analysis\n");
+                    }
+                    AST.clearTree();
+
+                    ////////
+                    // End Semantic Analysis
                     ////////
 
                     tokens.clear();

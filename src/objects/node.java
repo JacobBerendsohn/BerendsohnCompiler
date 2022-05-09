@@ -1,4 +1,8 @@
+package objects;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class node {
     String name = "";
@@ -6,18 +10,39 @@ public class node {
     ArrayList<node> children = new ArrayList<>();
     token leafToken = null;
     Boolean isRoot = false;
+    Map<String, scope> scopeInfo = new HashMap<String, scope>();
 
     public node(String name) {
         this.name = name;
+    }
+
+    public Map<String, scope> getScopes() {
+        return this.scopeInfo;
+    }
+
+    public boolean isScopeEmpty() {
+        return scopeInfo.isEmpty();
     }
 
     public node() {
 
     }
 
+    public void addScope(String id, scope scope) {
+        this.scopeInfo.put(id, scope);
+    }
+
+    public scope getScope(String id) {
+        return this.scopeInfo.get(id);
+    }
+
     // Function for adding children to a node
     public void addChild(node child) {
         this.children.add(child);
+    }
+
+    public ArrayList<node> getChildren() {
+        return this.children;
     }
 
     public void setParent(node parent) {
@@ -38,6 +63,10 @@ public class node {
 
     public void addLeafToken(token leafT) {
         this.leafToken = leafT;
+    }
+
+    public token getToken() {
+        return this.leafToken;
     }
 
     public String listChildren() {
