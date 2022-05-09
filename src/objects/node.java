@@ -16,6 +16,10 @@ public class node {
         this.name = name;
     }
 
+    public Map<String, scope> getScopes() {
+        return this.scopeInfo;
+    }
+
     public boolean isScopeEmpty() {
         return scopeInfo.isEmpty();
     }

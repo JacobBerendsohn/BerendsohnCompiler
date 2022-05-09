@@ -1,5 +1,9 @@
 package objects;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+
 // This class was adapted from the psuedocode on page 154 of the parse PDF
 // as well as treeDemo.js from labouseur.com
 public class parseTree {
@@ -101,6 +105,58 @@ public class parseTree {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public String printSymbolTable() {
+        String symbolTable = "";
+        symbolTable += "Name    Type    isINIT    isUSED    SCOPE\n";
+
+        ArrayList<Map<String, scope>> scopes = expandSymbolTable(rootNode, 0);
+        ArrayList<Object[]> setKeys = new ArrayList<>();
+
+        for (int i = 0; i < scopes.size(); i++) {
+            setKeys.add(scopes.get(i).keySet().toArray());
+        }
+
+        ArrayList<String> keys = new ArrayList<>();
+        int mapCount = 0;
+
+        for (int j = 0; j < setKeys.size(); j++) {
+
+            for (int k = 0; k < setKeys.get(j).length; k++) {
+                symbolTable += scopes.get(j).get(setKeys.get(j)[k]).getName() + "       "
+                        + scopes.get(j).get(setKeys.get(j)[k]).getType() + "     "
+                        + scopes.get(j).get(setKeys.get(j)[k]).isInit() + "      "
+                        + scopes.get(j).get(setKeys.get(j)[k]).isUsed() + "     "
+                        + scopes.get(j).get(setKeys.get(j)[k]).getScope() + "\n";
+            }
+        }
+
+        return symbolTable;
+    }
+
+    public ArrayList<Map<String, scope>> expandSymbolTable(node curNode, int depth) {
+        // Adding space for visuals
+        ArrayList<Map<String, scope>> scopes = new ArrayList<>();
+
+        // Checking for leaf nodes
+        if (curNode.getChildren().isEmpty()) {
+
+            scopes.add(curNode.getScopes());
+
+        } else {
+            // Children present so show interior branches
+
+            scopes.add(curNode.getScopes());
+
+            // Recursion loop [FUN] :)
+            for (int i = 0; i < curNode.getChildren().size(); i++) {
+                expandSymbolTable(curNode, depth);
+            }
+        }
+
+        return scopes;
+
     }
 
 }
