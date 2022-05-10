@@ -28,6 +28,10 @@ public class codeGen {
         return data;
     }
 
+    public void setVariables() {
+
+    }
+
     public void iterateTree(parseTree AST) {
         iterateTreeRecur(AST.getRootNode(), 0);
     }
