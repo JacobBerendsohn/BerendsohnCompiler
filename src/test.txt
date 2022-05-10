@@ -1,4 +1,12 @@
 {
     int a
-    a = "not an error"
+    a = 6
+    {
+        string a
+        a = "string a"
+        string b
+        b = a
+        print(b)
+    }
+    print(a)
 }$
