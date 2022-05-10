@@ -23,7 +23,7 @@ public class lexer {
     // passing the current position between functions
     // public int curPosInLineArray = 0;
 
-    public ArrayList<token> lex(File inputFile, parser parse, semantic semantic) {
+    public ArrayList<token> lex(File inputFile, parser parse, semantic semantic, codeGen codeGen) {
 
         BufferedReader reader;
 
@@ -133,7 +133,7 @@ public class lexer {
                 if (checkEOP(preTokenList, curPosInLineArray, line) != null) {
                     token diT = checkEOP(preTokenList, curPosInLineArray, line);
                     tokens.add(diT);
-                    runParse(line, inputLines, parse, semantic);
+                    runParse(line, inputLines, parse, semantic, codeGen);
                 } else
                 // Unrecognized Token Check
                 if (preTokenList.get(curPosInLineArray) != null && !preTokenList.get(curPosInLineArray).equals(" ")
@@ -152,7 +152,8 @@ public class lexer {
     }
 
     // Ends lex for each individual program and sends it through parsing
-    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse, semantic semantic) {
+    public void runParse(int currLine, HashMap<Integer, String> inputLines, parser parse, semantic semantic,
+            codeGen codeGen) {
         // Check for end of program to run Parse and then Lex next Program
         if (!tokens.isEmpty()) {
             if (tokens.get(tokens.size() - 1).getValue().equals("$")) {
@@ -210,12 +211,19 @@ public class lexer {
                         System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
                                 + " stopped in semantic analysis\n");
                     }
-                    AST.clearTree();
 
                     ////////
                     // End Semantic Analysis
                     ////////
 
+                    codeGen.createInfo(
+                            "Code Generation starting for Program " + Integer.toString(programCount - 1) + "...");
+                    String[] generatedCode = codeGen.generateCode(AST);
+                    for (String string : generatedCode) {
+                        System.out.println(string);
+                    }
+
+                    AST.clearTree();
                     tokens.clear();
 
                     if (inputLines.get(currLine + 1) != null) {

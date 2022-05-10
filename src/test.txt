@@ -1,12 +1,4 @@
 {
     int a
-    a = 6
-    {
-        string a
-        a = "string a"
-        string b
-        b = a
-        print(b)
-    }
-    print(a)
+    int b
 }$

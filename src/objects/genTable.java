@@ -3,14 +3,16 @@ package objects;
 public class genTable {
     String tempName = "";
     String varName = "";
-    String address = "";
+    int address = 0x00;
+    token varToken = null;
 
     int jumpDist = 0;
 
-    public genTable(String tempName, String varName, String address) {
+    public genTable(String tempName, String varName, int address, token varToken) {
         this.tempName = tempName;
         this.varName = varName;
         this.address = address;
+        this.varToken = varToken;
     }
 
     public genTable(String tempName, int jumpDist) {
@@ -26,7 +28,7 @@ public class genTable {
         this.varName = varName;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(int address) {
         this.address = address;
     }
 
@@ -42,7 +44,7 @@ public class genTable {
         return this.varName;
     }
 
-    public String getAddress() {
+    public int getAddress() {
         return this.address;
     }
 
