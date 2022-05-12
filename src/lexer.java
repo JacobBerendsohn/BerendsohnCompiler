@@ -223,7 +223,7 @@ public class lexer {
                             "Code Generation starting for Program " + Integer.toString(programCount - 1) + "...");
                     String[] generatedCode = codeGen.generateCode(AST, fullScope);
                     for (String string : generatedCode) {
-                        System.out.println(string);
+                        System.out.print(string + " ");
                     }
 
                     AST.clearTree();

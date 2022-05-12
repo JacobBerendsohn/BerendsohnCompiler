@@ -1,10 +1,5 @@
 {
     int a
     a = 3
-    string b
-    b = "hi"
-    string c
-    c = "hello"
     print(a)
-    print(b)
 }$

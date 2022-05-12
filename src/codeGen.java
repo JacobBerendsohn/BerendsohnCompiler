@@ -42,12 +42,31 @@ public class codeGen {
         }
 
         iterateTree(AST, fullScope);
+        backPatch();
 
         return data;
     }
 
-    public void setVariables() {
+    public void backPatch() {
 
+        memPointer++;
+
+        int startStaticVars = memPointer;
+        // Setting the correct addresses for each variable after code is generated
+        for (genTable vars : variableTable) {
+            vars.setAddress(memPointer);
+            for (int dataPointer = 0; dataPointer < data.length; dataPointer++) {
+                if (data[dataPointer].equals(vars.getTempName())) {
+                    data[dataPointer] = Integer.toHexString(vars.getAddress());
+                    data[dataPointer + 1] = "00";
+                }
+            }
+            memPointer++;
+        }
+
+        memPointer = startStaticVars;
+
+        System.out.println("");
     }
 
     public void iterateTree(parseTree AST, parseTree fullScope) {
@@ -174,7 +193,8 @@ public class codeGen {
                         String[] addToHeap = curNode.getName().split("");
 
                         for (int i = 0; i < curNode.getName().length(); i++) {
-                            data[curHeapStart + i] = addToHeap[i];
+                            char a = addToHeap[i].charAt(0);
+                            data[curHeapStart + i] = Integer.toHexString((int) a).toUpperCase();
                         }
 
                         curHeapStart--;
@@ -201,7 +221,7 @@ public class codeGen {
 
                     for (int i = 0; i < assignPrintAddresses; i++) {
                         if (i == 0) {
-                            data[memPointer] = "A9";
+                            data[memPointer] = "A2";
                             memPointer++;
                         } else if (i == 1) {
                             data[memPointer] = "01";
@@ -225,7 +245,7 @@ public class codeGen {
 
                     for (int i = 0; i < assignPrintAddresses; i++) {
                         if (i == 0) {
-                            data[memPointer] = "A9";
+                            data[memPointer] = "A2";
                             memPointer++;
                         } else if (i == 1) {
                             data[memPointer] = "02";
