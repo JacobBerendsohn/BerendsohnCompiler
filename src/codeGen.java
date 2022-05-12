@@ -187,6 +187,65 @@ public class codeGen {
 
             } else if (curNode.getParent().getName().equals("PrintStatement")) {
 
+                int assignPrintAddresses = 6;
+
+                String curVarTemp = "";
+
+                for (genTable g : variableTable) {
+                    if (g.getVarName().equals(curNode.getName())) {
+                        curVarTemp = g.getTempName();
+                    }
+                }
+
+                if (variableTypes.get(curNode.getName()).equals("int")) {
+
+                    for (int i = 0; i < assignPrintAddresses; i++) {
+                        if (i == 0) {
+                            data[memPointer] = "A9";
+                            memPointer++;
+                        } else if (i == 1) {
+                            data[memPointer] = "01";
+                            memPointer++;
+                        } else if (i == 2) {
+                            data[memPointer] = "AC";
+                            memPointer++;
+                        } else if (i == 3) {
+                            data[memPointer] = curVarTemp;
+                            memPointer++;
+                        } else if (i == 4) {
+                            data[memPointer] = "XX";
+                            memPointer++;
+                        } else if (i == 5) {
+                            data[memPointer] = "FF";
+                            memPointer++;
+                        }
+                    }
+
+                } else if (variableTypes.get(curNode.getName()).equals("string")) {
+
+                    for (int i = 0; i < assignPrintAddresses; i++) {
+                        if (i == 0) {
+                            data[memPointer] = "A9";
+                            memPointer++;
+                        } else if (i == 1) {
+                            data[memPointer] = "02";
+                            memPointer++;
+                        } else if (i == 2) {
+                            data[memPointer] = "AC";
+                            memPointer++;
+                        } else if (i == 3) {
+                            data[memPointer] = curVarTemp;
+                            memPointer++;
+                        } else if (i == 4) {
+                            data[memPointer] = "XX";
+                            memPointer++;
+                        } else if (i == 5) {
+                            data[memPointer] = "FF";
+                            memPointer++;
+                        }
+                    }
+                }
+
             } else if (curNode.getParent().getName().equals("IfStatement")) {
 
             } else if (curNode.getParent().getName().equals("WhileStatement")) {
