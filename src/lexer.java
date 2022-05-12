@@ -200,6 +200,9 @@ public class lexer {
                                     + Integer.toString(programCount - 1) + "...");
 
                     parseTree AST = semantic.startSemantic(tokens);
+                    parseTree fullScope = semantic.scopeCheck(AST.getRootNode(), 0);
+                    System.out.println("\n ---------------SYMBOL TABLE--------------- \n");
+                    System.out.println(fullScope.printSymbolTable());
 
                     if (!AST.isError()) {
                         semantic.createInfo(
@@ -218,7 +221,7 @@ public class lexer {
 
                     codeGen.createInfo(
                             "Code Generation starting for Program " + Integer.toString(programCount - 1) + "...");
-                    String[] generatedCode = codeGen.generateCode(AST);
+                    String[] generatedCode = codeGen.generateCode(AST, fullScope);
                     for (String string : generatedCode) {
                         System.out.println(string);
                     }

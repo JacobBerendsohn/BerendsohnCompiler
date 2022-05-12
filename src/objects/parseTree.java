@@ -2,7 +2,6 @@ package objects;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 // This class was adapted from the psuedocode on page 154 of the parse PDF
 // as well as treeDemo.js from labouseur.com

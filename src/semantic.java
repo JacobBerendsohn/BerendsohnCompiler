@@ -15,9 +15,6 @@ public class semantic {
     public parseTree startSemantic(ArrayList<token> tokenList) {
         tokens = tokenList;
         semanticProgram();
-        parseTree fullScope = scopeCheck(currTree.getRootNode(), 0);
-        System.out.println("\n ---------------SYMBOL TABLE--------------- \n");
-        System.out.println(fullScope.printSymbolTable());
         tokens = new ArrayList<token>();
         currTokenInArray = 0;
         return currTree;

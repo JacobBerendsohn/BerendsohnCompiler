@@ -1,4 +1,8 @@
 {
     int a
-    int b
+    a = 3
+    string b
+    b = "hi"
+    string c
+    c = "hello"
 }$

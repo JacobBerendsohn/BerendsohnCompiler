@@ -1,4 +1,9 @@
 import java.util.ArrayList;
+import java.util.Map;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
+import java.util.HashMap;
 
 import objects.parseTree;
 import objects.scope;
@@ -14,16 +19,29 @@ public class codeGen {
     // Creating arraylists for holding var and jump info
     ArrayList<genTable> variableTable = new ArrayList<>();
     ArrayList<genTable> jumpTable = new ArrayList<>();
+    Map<String, String> variableTypes = new HashMap<String, String>();
 
-    public String[] generateCode(parseTree AST) {
+    int curHeapStart = 0xFE;
 
-        iterateTree(AST);
+    String variableNameHolder = "";
+
+    String variableTypeHolder = "";
+
+    int numChild = 0;
+
+    int curTempNum = 0;
+
+    public String[] generateCode(parseTree AST, parseTree fullScope) {
+
+        data[0xFE] = "00";
 
         for (int i = 0; i < data.length; i++) {
             if (data[i] == null) {
                 data[i] = "00";
             }
         }
+
+        iterateTree(AST, fullScope);
 
         return data;
     }
@@ -32,16 +50,13 @@ public class codeGen {
 
     }
 
-    public void iterateTree(parseTree AST) {
-        iterateTreeRecur(AST.getRootNode(), 0);
+    public void iterateTree(parseTree AST, parseTree fullScope) {
+        iterateTreeRecur(AST.getRootNode(), 0, fullScope);
     }
 
     // Varibable to see which child of a parent we are on
-    int numChild = 0;
 
-    int curTempNum = 0;
-
-    public void iterateTreeRecur(node curNode, int depth) {
+    public void iterateTreeRecur(node curNode, int depth, parseTree fullScope) {
 
         // Checking for leaf nodes
         if (curNode.getChildren().isEmpty()) {
@@ -54,13 +69,19 @@ public class codeGen {
                 int varDeclAddresses = 5;
 
                 if (numChild == 0) {
+
                     numChild++;
+                    variableTypeHolder = curNode.getName();
+
                 } else {
+
+                    variableTypes.put(curNode.getName(), variableTypeHolder);
 
                     genTable curVar = new genTable("T" + Integer.toString(curTempNum), curNode.getName(), 0x00,
                             curNode.getToken());
                     variableTable.add(curVar);
 
+                    // Storing an int declaration
                     for (int i = 0; i < varDeclAddresses; i++) {
                         if (i == 0) {
                             data[memPointer] = "A9";
@@ -76,6 +97,7 @@ public class codeGen {
                             memPointer++;
                         } else if (i == 4) {
                             data[memPointer] = "XX";
+                            memPointer++;
                         }
                     }
 
@@ -85,6 +107,83 @@ public class codeGen {
                 }
 
             } else if (curNode.getParent().getName().equals("AssignmentStatement")) {
+
+                int assignIntAddresses = 5;
+
+                if (numChild == 0) {
+
+                    variableNameHolder = curNode.getName();
+                    numChild++;
+
+                } else if (numChild == 1) {
+
+                    String currentTempVar = "";
+
+                    for (genTable curVar : variableTable) {
+                        if (curVar.getVarName().equals(variableNameHolder)) {
+                            currentTempVar = curVar.getTempName();
+                        }
+                    }
+
+                    if (variableTypes.get(variableNameHolder).equals("int")) {
+                        for (int i = 0; i < assignIntAddresses; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A9";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = "0" + curNode.getName();
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "8D";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = currentTempVar;
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            }
+                        }
+
+                        numChild = 0;
+                        variableNameHolder = "";
+
+                    } else if (variableTypes.get(variableNameHolder).equals("string")) {
+
+                        curHeapStart -= curNode.getName().length();
+
+                        for (int i = 0; i < assignIntAddresses; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A9";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = Integer.toHexString(curHeapStart).toUpperCase();
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "8D";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = currentTempVar;
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            }
+                        }
+
+                        String[] addToHeap = curNode.getName().split("");
+
+                        for (int i = 0; i < curNode.getName().length(); i++) {
+                            data[curHeapStart + i] = addToHeap[i];
+                        }
+
+                        curHeapStart--;
+
+                        numChild = 0;
+                        variableNameHolder = "";
+                    }
+
+                }
 
             } else if (curNode.getParent().getName().equals("PrintStatement")) {
 
@@ -99,7 +198,7 @@ public class codeGen {
 
             // Recursion loop [FUN] :)
             for (int i = 0; i < curNode.getChildren().size(); i++) {
-                iterateTreeRecur(curNode.getChildren().get(i), depth + 1);
+                iterateTreeRecur(curNode.getChildren().get(i), depth + 1, fullScope);
             }
         }
     }
