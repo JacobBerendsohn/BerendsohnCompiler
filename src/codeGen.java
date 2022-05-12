@@ -23,6 +23,9 @@ public class codeGen {
 
     int curHeapStart = 0xFE;
 
+    String truePointer = "FA";
+    String falsePointer = "F4";
+
     String variableNameHolder = "";
 
     String variableTypeHolder = "";
@@ -40,6 +43,27 @@ public class codeGen {
                 data[i] = "00";
             }
         }
+
+        curHeapStart -= "true".length();
+
+        String[] trueVar = "true".split("");
+        String[] falseVar = "false".split("");
+
+        for (int i = 0; i < "true".length(); i++) {
+            char a = trueVar[i].charAt(0);
+            data[curHeapStart + i] = Integer.toHexString((int) a).toUpperCase();
+        }
+
+        curHeapStart--;
+
+        curHeapStart -= "false".length();
+
+        for (int i = 0; i < "false".length(); i++) {
+            char a = falseVar[i].charAt(0);
+            data[curHeapStart + i] = Integer.toHexString((int) a).toUpperCase();
+        }
+
+        curHeapStart--;
 
         iterateTree(AST, fullScope);
         backPatch();
@@ -112,7 +136,7 @@ public class codeGen {
                             data[memPointer] = "8D";
                             memPointer++;
                         } else if (i == 3) {
-                            data[memPointer] = variableTable.get(curTempNum).getTempName();
+                            data[memPointer] = variableTable.get(curTempNum).getTempName().toUpperCase();
                             memPointer++;
                         } else if (i == 4) {
                             data[memPointer] = "XX";
@@ -150,7 +174,7 @@ public class codeGen {
                                 data[memPointer] = "A9";
                                 memPointer++;
                             } else if (i == 1) {
-                                data[memPointer] = "0" + curNode.getName();
+                                data[memPointer] = "0" + curNode.getName().toUpperCase();
                                 memPointer++;
                             } else if (i == 2) {
                                 data[memPointer] = "8D";
@@ -201,6 +225,53 @@ public class codeGen {
 
                         numChild = 0;
                         variableNameHolder = "";
+                    } else if (variableTypes.get(variableNameHolder).equals("boolean")) {
+
+                        if (curNode.getName().equals("true")) {
+                            for (int i = 0; i < assignIntAddresses; i++) {
+                                if (i == 0) {
+                                    data[memPointer] = "A9";
+                                    memPointer++;
+                                } else if (i == 1) {
+                                    data[memPointer] = truePointer;
+                                    memPointer++;
+                                } else if (i == 2) {
+                                    data[memPointer] = "8D";
+                                    memPointer++;
+                                } else if (i == 3) {
+                                    data[memPointer] = currentTempVar;
+                                    memPointer++;
+                                } else if (i == 4) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                }
+                            }
+                        } else if (curNode.getName().equals("false")) {
+                            for (int i = 0; i < assignIntAddresses; i++) {
+                                if (i == 0) {
+                                    data[memPointer] = "A9";
+                                    memPointer++;
+                                } else if (i == 1) {
+                                    data[memPointer] = falsePointer;
+                                    memPointer++;
+                                } else if (i == 2) {
+                                    data[memPointer] = "8D";
+                                    memPointer++;
+                                } else if (i == 3) {
+                                    data[memPointer] = currentTempVar;
+                                    memPointer++;
+                                } else if (i == 4) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                }
+                            }
+                        }
+
+                        numChild = 0;
+                        variableNameHolder = "";
+
+                    } else {
+
                     }
 
                 }
@@ -242,6 +313,30 @@ public class codeGen {
                     }
 
                 } else if (variableTypes.get(curNode.getName()).equals("string")) {
+
+                    for (int i = 0; i < assignPrintAddresses; i++) {
+                        if (i == 0) {
+                            data[memPointer] = "A2";
+                            memPointer++;
+                        } else if (i == 1) {
+                            data[memPointer] = "02";
+                            memPointer++;
+                        } else if (i == 2) {
+                            data[memPointer] = "AC";
+                            memPointer++;
+                        } else if (i == 3) {
+                            data[memPointer] = curVarTemp;
+                            memPointer++;
+                        } else if (i == 4) {
+                            data[memPointer] = "XX";
+                            memPointer++;
+                        } else if (i == 5) {
+                            data[memPointer] = "FF";
+                            memPointer++;
+                        }
+                    }
+
+                } else if (variableTypes.get(curNode.getName()).equals("boolean")) {
 
                     for (int i = 0; i < assignPrintAddresses; i++) {
                         if (i == 0) {

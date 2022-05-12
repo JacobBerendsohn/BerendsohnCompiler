@@ -1,11 +1,27 @@
 {
     int a
-    a = 3
-    string b
-    b = "hi"
-    string c
-    c = "hello"
+    int b
+    int c
+    string d
+    string e
+    string f
+    boolean g
+    boolean h
+    a = 1
+    b = 2
+    c = 3
+    d = "co"
+    e = "mpil"
+    f = "ers"
+    g = true
+    h = false
     print(a)
     print(b)
     print(c)
+    print(d)
+    print(e)
+    print(f)
+    print(g)
+    print(h)
+
 }$
