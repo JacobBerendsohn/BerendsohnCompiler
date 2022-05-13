@@ -19,7 +19,12 @@ public class codeGen {
     ArrayList<genTable> jumpTable = new ArrayList<>();
     Map<String, String> variableTypes = new HashMap<String, String>();
 
+    int numJumps = 0;
+
     int curHeapStart = 0xFE;
+
+    boolean inIfStatement = false;
+    int ifDepth = 0;
 
     String truePointer = "FA";
     String falsePointer = "F4";
@@ -86,6 +91,15 @@ public class codeGen {
             memPointer++;
         }
 
+        for (genTable vars : jumpTable) {
+            for (int dataPointer = 0; dataPointer < data.length; dataPointer++) {
+                if (data[dataPointer].equals(vars.getTempName())) {
+                    data[dataPointer] = Integer.toHexString(vars.getJumpDist()).toUpperCase();
+                }
+            }
+            memPointer++;
+        }
+
         memPointer = startStaticVars;
 
         System.out.println("");
@@ -99,6 +113,9 @@ public class codeGen {
 
     public void iterateTreeRecur(node curNode, int depth, parseTree fullScope) {
 
+        if (depth <= ifDepth) {
+            inIfStatement = false;
+        }
         // Checking for leaf nodes
         if (curNode.getChildren().isEmpty()) {
 
@@ -144,6 +161,12 @@ public class codeGen {
 
                     numChild = 0;
                     curTempNum++;
+
+                    if (inIfStatement) {
+                        if (!jumpTable.isEmpty()) {
+                            jumpTable.get(numJumps - 1).addToJump(varDeclAddresses);
+                        }
+                    }
 
                 }
 
@@ -197,6 +220,14 @@ public class codeGen {
                             } else if (i == 5) {
                                 data[memPointer] = "XX";
                                 memPointer++;
+                            }
+                        }
+
+                        numChild = 0;
+
+                        if (inIfStatement) {
+                            if (!jumpTable.isEmpty()) {
+                                jumpTable.get(numJumps - 1).addToJump(assignVariable);
                             }
                         }
 
@@ -315,6 +346,12 @@ public class codeGen {
                         } else {
 
                         }
+
+                        if (inIfStatement) {
+                            if (!jumpTable.isEmpty()) {
+                                jumpTable.get(numJumps - 1).addToJump(assignIntAddresses);
+                            }
+                        }
                     }
 
                 }
@@ -405,6 +442,12 @@ public class codeGen {
                         }
                     }
 
+                    if (inIfStatement) {
+                        if (!jumpTable.isEmpty()) {
+                            jumpTable.get(numJumps - 1).addToJump(assignPrintAddresses);
+                        }
+                    }
+
                 } else {
 
                     // Case where something is printed with no variable declared
@@ -429,6 +472,12 @@ public class codeGen {
                             } else if (i == 4) {
                                 data[memPointer] = "FF";
                                 memPointer++;
+                            }
+                        }
+
+                        if (inIfStatement) {
+                            if (!jumpTable.isEmpty()) {
+                                jumpTable.get(numJumps - 1).addToJump(digitPrint);
                             }
                         }
 
@@ -488,6 +537,12 @@ public class codeGen {
                             data[curHeapStart + i] = Integer.toHexString((int) a).toUpperCase();
                         }
 
+                        if (inIfStatement) {
+                            if (!jumpTable.isEmpty()) {
+                                jumpTable.get(numJumps - 1).addToJump(stringExprPrint);
+                            }
+                        }
+
                         //////
                     } else if (curNode.getToken().getType().equals("BOOLEAN_VALUE")) {
 
@@ -536,6 +591,7 @@ public class codeGen {
                                     memPointer++;
                                 }
                             }
+
                         } else if (curNode.getName().equals("false")) {
                             for (int i = 0; i < booleanExprPrint; i++) {
                                 if (i == 0) {
@@ -575,10 +631,86 @@ public class codeGen {
                             }
                         }
 
+                        if (inIfStatement) {
+                            if (!jumpTable.isEmpty()) {
+                                jumpTable.get(numJumps - 1).addToJump(booleanExprPrint);
+                            }
+                        }
+
                     }
                 }
 
             } else if (curNode.getParent().getName().equals("IfStatement")) {
+
+                ifDepth = depth - 1;
+
+                inIfStatement = true;
+
+                int ifIterOne = 3;
+
+                int ifIterTwo = 5;
+
+                String ifTempHolder = "";
+
+                if (numChild == 0) {
+
+                    for (genTable g : variableTable) {
+                        if (g.getVarName().equals(curNode.getName())) {
+                            ifTempHolder = g.getTempName();
+                        }
+                    }
+
+                    for (int i = 0; i < ifIterOne; i++) {
+                        if (i == 0) {
+                            data[memPointer] = "AE";
+                            memPointer++;
+                        } else if (i == 1) {
+                            data[memPointer] = ifTempHolder;
+                            memPointer++;
+                        } else if (i == 2) {
+                            data[memPointer] = "XX";
+                            memPointer++;
+                        }
+                    }
+
+                    numChild++;
+
+                } else if (numChild == 1) {
+
+                    genTable jumpVar = new genTable("J" + Integer.toString(numJumps), 0);
+                    jumpTable.add(jumpVar);
+                    numJumps++;
+
+                    for (genTable g : variableTable) {
+                        if (g.getVarName().equals(curNode.getName())) {
+                            ifTempHolder = g.getTempName();
+                        }
+                    }
+
+                    for (int i = 0; i < ifIterTwo; i++) {
+                        if (i == 0) {
+                            data[memPointer] = "EC";
+                            memPointer++;
+                        } else if (i == 1) {
+                            data[memPointer] = ifTempHolder;
+                            memPointer++;
+                        } else if (i == 2) {
+                            data[memPointer] = "XX";
+                            memPointer++;
+                        } else if (i == 3) {
+                            data[memPointer] = "D0";
+                            memPointer++;
+                        } else if (i == 4) {
+                            data[memPointer] = jumpVar.getTempName();
+                            memPointer++;
+                        }
+                    }
+
+                    numChild++;
+
+                } else {
+                    numChild = 0;
+                }
 
             } else if (curNode.getParent().getName().equals("WhileStatement")) {
 

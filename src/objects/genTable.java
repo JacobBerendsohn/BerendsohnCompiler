@@ -20,6 +20,10 @@ public class genTable {
         this.jumpDist = jumpDist;
     }
 
+    public void addToJump(int addJump) {
+        jumpDist += addJump;
+    }
+
     public void setTempName(String tempName) {
         this.tempName = tempName;
     }
