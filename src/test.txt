@@ -4,6 +4,8 @@
     a = 3
     b = 4
     a = b
-    print(a)
     print(b)
+    if(a == b){
+        print(a)
+    }
 }$
