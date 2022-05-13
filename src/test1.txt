@@ -221,12 +221,8 @@ Works in CodeGen
 
 {
     int a
-    int b
-    a = 3
-    b = 4
-    a = b
+    a = 1
     print(a)
-    print(b)
 }$
 
 {
