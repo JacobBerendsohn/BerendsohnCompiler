@@ -210,6 +210,13 @@ public class lexer {
                         parse.createInfo("AST for program " + Integer.toString(programCount - 1));
                         System.out.println(AST.toString());
 
+                        codeGen.createInfo(
+                                "Code Generation starting for Program " + Integer.toString(programCount - 1) + "...");
+                        String[] generatedCode = codeGen.generateCode(AST, fullScope);
+                        for (String string : generatedCode) {
+                            System.out.print(string + " ");
+                        }
+
                     } else {
                         System.out.println("Error(s) found in program " + Integer.toString(programCount - 1)
                                 + " stopped in semantic analysis\n");
@@ -218,13 +225,6 @@ public class lexer {
                     ////////
                     // End Semantic Analysis
                     ////////
-
-                    codeGen.createInfo(
-                            "Code Generation starting for Program " + Integer.toString(programCount - 1) + "...");
-                    String[] generatedCode = codeGen.generateCode(AST, fullScope);
-                    for (String string : generatedCode) {
-                        System.out.print(string + " ");
-                    }
 
                     AST.clearTree();
                     tokens.clear();

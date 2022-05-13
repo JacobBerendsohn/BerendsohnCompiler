@@ -81,7 +81,7 @@ public class codeGen {
             vars.setAddress(memPointer);
             for (int dataPointer = 0; dataPointer < data.length; dataPointer++) {
                 if (data[dataPointer].equals(vars.getTempName())) {
-                    data[dataPointer] = Integer.toHexString(vars.getAddress());
+                    data[dataPointer] = Integer.toHexString(vars.getAddress()).toUpperCase();
                     data[dataPointer + 1] = "00";
                 }
             }
@@ -288,76 +288,250 @@ public class codeGen {
                     }
                 }
 
-                if (variableTypes.get(curNode.getName()).equals("int")) {
+                if (variableTypes.get(curNode.getName()) != null) {
+                    if (variableTypes.get(curNode.getName()).equals("int")) {
 
-                    for (int i = 0; i < assignPrintAddresses; i++) {
-                        if (i == 0) {
-                            data[memPointer] = "A2";
-                            memPointer++;
-                        } else if (i == 1) {
-                            data[memPointer] = "01";
-                            memPointer++;
-                        } else if (i == 2) {
-                            data[memPointer] = "AC";
-                            memPointer++;
-                        } else if (i == 3) {
-                            data[memPointer] = curVarTemp;
-                            memPointer++;
-                        } else if (i == 4) {
-                            data[memPointer] = "XX";
-                            memPointer++;
-                        } else if (i == 5) {
-                            data[memPointer] = "FF";
-                            memPointer++;
+                        for (int i = 0; i < assignPrintAddresses; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A2";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = "01";
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "AC";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = curVarTemp;
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            } else if (i == 5) {
+                                data[memPointer] = "FF";
+                                memPointer++;
+                            }
+                        }
+
+                    } else if (variableTypes.get(curNode.getName()).equals("string")) {
+
+                        for (int i = 0; i < assignPrintAddresses; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A2";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = "02";
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "AC";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = curVarTemp;
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            } else if (i == 5) {
+                                data[memPointer] = "FF";
+                                memPointer++;
+                            }
+                        }
+
+                    } else if (variableTypes.get(curNode.getName()).equals("boolean")) {
+
+                        for (int i = 0; i < assignPrintAddresses; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A2";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = "02";
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "AC";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = curVarTemp;
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            } else if (i == 5) {
+                                data[memPointer] = "FF";
+                                memPointer++;
+                            }
                         }
                     }
 
-                } else if (variableTypes.get(curNode.getName()).equals("string")) {
+                } else {
 
-                    for (int i = 0; i < assignPrintAddresses; i++) {
-                        if (i == 0) {
-                            data[memPointer] = "A2";
-                            memPointer++;
-                        } else if (i == 1) {
-                            data[memPointer] = "02";
-                            memPointer++;
-                        } else if (i == 2) {
-                            data[memPointer] = "AC";
-                            memPointer++;
-                        } else if (i == 3) {
-                            data[memPointer] = curVarTemp;
-                            memPointer++;
-                        } else if (i == 4) {
-                            data[memPointer] = "XX";
-                            memPointer++;
-                        } else if (i == 5) {
-                            data[memPointer] = "FF";
-                            memPointer++;
+                    // Case where something is printed with no variable declared
+                    if (curNode.getToken().getType().equals("DIGIT")) {
+
+                        int digitPrint = 5;
+
+                        for (int i = 0; i < digitPrint; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A2";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = "01";
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "A0";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = Integer.toHexString(Integer.parseInt(curNode.getName()))
+                                        .toUpperCase();
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "FF";
+                                memPointer++;
+                            }
                         }
-                    }
 
-                } else if (variableTypes.get(curNode.getName()).equals("boolean")) {
+                    } else if (curNode.getToken().getType().equals("STRING_EXPR")) {
 
-                    for (int i = 0; i < assignPrintAddresses; i++) {
-                        if (i == 0) {
-                            data[memPointer] = "A2";
-                            memPointer++;
-                        } else if (i == 1) {
-                            data[memPointer] = "02";
-                            memPointer++;
-                        } else if (i == 2) {
-                            data[memPointer] = "AC";
-                            memPointer++;
-                        } else if (i == 3) {
-                            data[memPointer] = curVarTemp;
-                            memPointer++;
-                        } else if (i == 4) {
-                            data[memPointer] = "XX";
-                            memPointer++;
-                        } else if (i == 5) {
-                            data[memPointer] = "FF";
-                            memPointer++;
+                        int stringExprPrint = 11;
+
+                        curHeapStart -= curNode.getName().length();
+
+                        genTable curVar = new genTable("T" + Integer.toString(curTempNum), curNode.getName(), 0x00,
+                                curNode.getToken());
+                        variableTable.add(curVar);
+
+                        curTempNum++;
+
+                        for (int i = 0; i < stringExprPrint; i++) {
+                            if (i == 0) {
+                                data[memPointer] = "A9";
+                                memPointer++;
+                            } else if (i == 1) {
+                                data[memPointer] = Integer.toHexString(curHeapStart).toUpperCase();
+                                memPointer++;
+                            } else if (i == 2) {
+                                data[memPointer] = "8D";
+                                memPointer++;
+                            } else if (i == 3) {
+                                data[memPointer] = curVar.getTempName(); ////
+                                memPointer++;
+                            } else if (i == 4) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            } else if (i == 5) {
+                                data[memPointer] = "A2";
+                                memPointer++;
+                            } else if (i == 6) {
+                                data[memPointer] = "02";
+                                memPointer++;
+                            } else if (i == 7) {
+                                data[memPointer] = "AC";
+                                memPointer++;
+                            } else if (i == 8) {
+                                data[memPointer] = curVar.getTempName(); ////
+                                memPointer++;
+                            } else if (i == 9) {
+                                data[memPointer] = "XX";
+                                memPointer++;
+                            } else if (i == 10) {
+                                data[memPointer] = "FF";
+                                memPointer++;
+                            }
                         }
+
+                        String[] addToHeap = curNode.getName().split("");
+
+                        for (int i = 0; i < curNode.getName().length(); i++) {
+                            char a = addToHeap[i].charAt(0);
+                            data[curHeapStart + i] = Integer.toHexString((int) a).toUpperCase();
+                        }
+
+                        //////
+                    } else if (curNode.getToken().getType().equals("BOOLEAN_VALUE")) {
+
+                        int booleanExprPrint = 11;
+
+                        genTable curVar = new genTable("T" + Integer.toString(curTempNum), curNode.getName(), 0x00,
+                                curNode.getToken());
+                        variableTable.add(curVar);
+
+                        curTempNum++;
+
+                        if (curNode.getName().equals("true")) {
+                            for (int i = 0; i < booleanExprPrint; i++) {
+                                if (i == 0) {
+                                    data[memPointer] = "A9";
+                                    memPointer++;
+                                } else if (i == 1) {
+                                    data[memPointer] = truePointer;
+                                    memPointer++;
+                                } else if (i == 2) {
+                                    data[memPointer] = "8D";
+                                    memPointer++;
+                                } else if (i == 3) {
+                                    data[memPointer] = curVar.getTempName(); ////
+                                    memPointer++;
+                                } else if (i == 4) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                } else if (i == 5) {
+                                    data[memPointer] = "A2";
+                                    memPointer++;
+                                } else if (i == 6) {
+                                    data[memPointer] = "02";
+                                    memPointer++;
+                                } else if (i == 7) {
+                                    data[memPointer] = "AC";
+                                    memPointer++;
+                                } else if (i == 8) {
+                                    data[memPointer] = curVar.getTempName(); ////
+                                    memPointer++;
+                                } else if (i == 9) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                } else if (i == 10) {
+                                    data[memPointer] = "FF";
+                                    memPointer++;
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < booleanExprPrint; i++) {
+                                if (i == 0) {
+                                    data[memPointer] = "A9";
+                                    memPointer++;
+                                } else if (i == 1) {
+                                    data[memPointer] = falsePointer;
+                                    memPointer++;
+                                } else if (i == 2) {
+                                    data[memPointer] = "8D";
+                                    memPointer++;
+                                } else if (i == 3) {
+                                    data[memPointer] = curVar.getTempName(); ////
+                                    memPointer++;
+                                } else if (i == 4) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                } else if (i == 5) {
+                                    data[memPointer] = "A2";
+                                    memPointer++;
+                                } else if (i == 6) {
+                                    data[memPointer] = "02";
+                                    memPointer++;
+                                } else if (i == 7) {
+                                    data[memPointer] = "AC";
+                                    memPointer++;
+                                } else if (i == 8) {
+                                    data[memPointer] = curVar.getTempName(); ////
+                                    memPointer++;
+                                } else if (i == 9) {
+                                    data[memPointer] = "XX";
+                                    memPointer++;
+                                } else if (i == 10) {
+                                    data[memPointer] = "FF";
+                                    memPointer++;
+                                }
+                            }
+                        }
+
                     }
                 }
 
