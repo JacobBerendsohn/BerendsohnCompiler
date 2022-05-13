@@ -13,6 +13,7 @@ public class compiler {
         lexer lex = new lexer();
         parser parse = new parser();
         semantic semantic = new semantic();
+        codeGen codeGen = new codeGen();
         parseTree pTree = new parseTree();
         token initToken = new token();
         node initNode = new node();
@@ -34,7 +35,7 @@ public class compiler {
         }
 
         // Starting the lexer
-        lex.lex(languageInput, parse, semantic);
+        lex.lex(languageInput, parse, semantic, codeGen);
 
     }
 }

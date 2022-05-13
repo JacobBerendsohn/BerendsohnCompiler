@@ -1,4 +1,14 @@
 {
     int a
-    a = "not an error"
+    int b
+    int c
+    a = 2
+    b = 2
+    c = 3
+    if(a == b){
+        print(a)
+        print(b)
+        print("hello")
+    }
+    print(c)
 }$

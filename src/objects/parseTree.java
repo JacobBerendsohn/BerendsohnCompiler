@@ -2,7 +2,6 @@ package objects;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 // This class was adapted from the psuedocode on page 154 of the parse PDF
 // as well as treeDemo.js from labouseur.com
@@ -118,9 +117,6 @@ public class parseTree {
             setKeys.add(scopes.get(i).keySet().toArray());
         }
 
-        ArrayList<String> keys = new ArrayList<>();
-        int mapCount = 0;
-
         for (int j = 0; j < setKeys.size(); j++) {
 
             for (int k = 0; k < setKeys.get(j).length; k++) {
@@ -135,28 +131,33 @@ public class parseTree {
         return symbolTable;
     }
 
+    ArrayList<Map<String, scope>> scopes = new ArrayList<>();
+
     public ArrayList<Map<String, scope>> expandSymbolTable(node curNode, int depth) {
         // Adding space for visuals
-        ArrayList<Map<String, scope>> scopes = new ArrayList<>();
 
         // Checking for leaf nodes
         if (curNode.getChildren().isEmpty()) {
 
-            scopes.add(curNode.getScopes());
+            addScopeToList(curNode, scopes);
 
         } else {
             // Children present so show interior branches
 
-            scopes.add(curNode.getScopes());
-
+            addScopeToList(curNode, scopes);
+            // scopes.add(curNode.getScopes());
             // Recursion loop [FUN] :)
             for (int i = 0; i < curNode.getChildren().size(); i++) {
-                expandSymbolTable(curNode, depth);
+                expandSymbolTable(curNode.getChildren().get(i), depth + 1);
             }
         }
 
         return scopes;
 
+    }
+
+    public void addScopeToList(node curNode, ArrayList<Map<String, scope>> scopes) {
+        scopes.add(curNode.getScopes());
     }
 
 }

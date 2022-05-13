@@ -1,0 +1,271 @@
+{print("")}$
+{print(a)}$
+{print(2)}$
+{print("a")}$
+{print(false)}$
+{print("inta")}$
+{a=1}$
+{a = 1}$
+{a = 1 + 2 + 3 + 4   +    5}$
+{
+    int a
+    a = a
+    string b
+    a = b
+}$
+{int a a=a string b a=b}$
+{{{{{{a=1+2+3+4+5{print(4+a)}}}}}}}$
+{
+    /* what about comments */
+    a="string"
+}$
+{
+    boolean d
+    d = ("string" != "string")
+}$
+
+
+{
+ int a
+ a = 1
+ {
+ string a
+ a = "a"
+ print(a)
+ }
+ string b
+ b = "b"
+ if (a == 1) {
+ print(b)
+ }
+}$
+
+Project 3 Tests
+
+{
+int a
+boolean b
+string c
+a = 5
+b = true
+c = "inta"
+/* is lex still working */
+print(c)
+print(b)
+print(a)
+print(5+a)
+}$
+
+{
+int a
+    {
+    boolean b
+        {
+        string c
+            {
+            a = 5
+            b = false
+            c = "inta"
+            }
+        print(c)
+        }
+    print(b)
+    }
+print(a)
+}$
+
+{
+    print("")
+    {}
+    int a
+    a = 0
+    a = 3 + a
+    int b
+    b = 8
+    {
+        {
+            print("inta is not int a")
+            print(1+2+3+4+5+4+3+2+1)
+            print(a)
+        }
+        int a
+        a = 7
+        string b
+        b = "one string"
+        print(b)
+    }
+}$
+
+{
+    int a
+    a = 6
+    {
+        string a
+        a = "string a"
+        string b
+        b = a
+        print(b)
+    }
+    print(a)
+}$
+
+{
+    int a
+    string b
+    b = "bee"
+    {
+        int b
+        b = 1
+        a = b
+        print(b)
+        print(a)
+    }
+    print(b)
+}$
+
+SHOULDNT WORK
+
+{
+    int a
+    a = "not an error"
+}$
+
+CODE GEN Tests
+
+{
+ int a
+ a = 3
+ int b
+ b = 4
+ a = b
+ print(a)
+ if (a == b) {
+ print(a)
+ }
+}$
+
+
+Works in CodeGen
+
+{
+    int a
+    a = 3
+    string b
+    b = "hi"
+    string c
+    c = "hello"
+    print(a)
+    print(b)
+    print(c)
+}$
+
+
+
+{
+    int a
+    int b
+    int c
+    string d
+    string e
+    string f
+    boolean g
+    boolean h
+    a = 1
+    b = 2
+    c = 3
+    d = "co"
+    e = "mpil"
+    f = "ers"
+    g = true
+    h = false
+    print(a)
+    print(b)
+    print(c)
+    print(d)
+    print(e)
+    print(f)
+    print(g)
+    print(h)
+}$
+
+{
+    boolean b
+    b = true
+    boolean f
+    f = false
+    print(b)
+    print(f)
+}$
+
+{
+    string a
+    a = "hello"
+    print(a)
+    print("hi")
+}$
+
+{
+    print(true)
+}$
+
+{
+    print(true)
+    print(false)
+    boolean b
+    b = true
+    print(b)
+    string a
+    a = "boolean working"
+    print(a)
+}$
+
+{
+    int a
+    int b
+    a = 3
+    b = 4
+    a = b
+    print(a)
+    print(b)
+}$
+
+{
+    int a
+    int b
+    a = 3
+    b = 4
+    a = b
+    print(b)
+    if(a == b){
+        print(a)
+    }
+}$
+
+{
+    int a
+    int b
+    int c
+    a = 1
+    b = 2
+    c = 3
+    if(a == b){
+        print(a)
+        print(b)
+    }
+    print(c)
+}$
+
+{
+    int a
+    int b
+    int c
+    a = 2
+    b = 2
+    c = 3
+    if(a == b){
+        print(a)
+        print(b)
+        print("hello")
+    }
+    print(c)
+}$
