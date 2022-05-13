@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-
 import java.util.HashMap;
 
 import objects.parseTree;
@@ -493,7 +491,7 @@ public class codeGen {
                                     memPointer++;
                                 }
                             }
-                        } else {
+                        } else if (curNode.getName().equals("false")) {
                             for (int i = 0; i < booleanExprPrint; i++) {
                                 if (i == 0) {
                                     data[memPointer] = "A9";

@@ -1,10 +1,9 @@
 {
-    print(true)
-    print(false)
-    boolean b
-    b = true
-    print(b)
-    string a
-    a = "boolean working"
+    int a
+    int b
+    a = 3
+    b = 4
+    a = b
     print(a)
+    print(b)
 }$
